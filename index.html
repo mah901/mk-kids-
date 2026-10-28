@@ -1,0 +1,996 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>MK Kids</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#1f3a5f">
+<link rel="icon" type="image/png" href="icon-192.png">
+<link rel="apple-touch-icon" href="icon-512.png">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="MK Kids">
+<style>
+*{box-sizing:border-box}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f5f9;color:#1d2433}
+header{background:#1f3a5f;color:#fff;padding:12px 20px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+header h1{margin:0;font-size:20px}
+.top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
+#who{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
+nav{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
+nav button{background:transparent;border:0;color:#cfd9e8;padding:8px 14px;cursor:pointer;font-size:15px;border-radius:6px;font-family:inherit}
+nav button.on{background:#fff;color:#1f3a5f;font-weight:bold}
+nav select{width:auto;margin-inline-start:8px}
+select.lg{width:auto;padding:4px 6px}
+main{max-width:1100px;margin:18px auto;padding:0 14px}
+.card{background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow-x:auto}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
+.stat{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
+.stat b{display:block;font-size:22px;margin-top:6px;color:#1f3a5f}
+table{width:100%;border-collapse:collapse}
+th,td{padding:8px;text-align:start;border-bottom:1px solid #e5e9f0;font-size:14px}
+th{background:#f3f5f9}
+input,select{padding:8px;border:1px solid #c5cdd9;border-radius:6px;font-family:inherit;font-size:14px;width:100%}
+input:disabled{background:#eef1f6;color:#667}
+label{font-size:13px;color:#566;display:block;margin:8px 0 3px}
+.row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}
+button.b{background:#1f3a5f;color:#fff;border:0;padding:9px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px}
+button.b:disabled{opacity:.5;cursor:wait}
+button.g{background:#2e8b57}button.r{background:#c0392b}button.s{background:#6b7a90}
+button.sm{padding:4px 10px;font-size:12px}
+.low{color:#c0392b;font-weight:bold}
+.sub{font-size:12px;color:#566;margin-top:3px}
+.cx td{opacity:.5;text-decoration:line-through}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;background:#e8eef7;font-size:12px}
+.dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:4px}
+.crow{display:grid;grid-template-columns:1fr 110px auto;gap:8px;margin-bottom:6px;max-width:460px}
+#modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);overflow:auto;padding:20px;z-index:9}
+#modal .box{background:#fff;max-width:760px;margin:0 auto;padding:24px;border-radius:10px;position:relative}
+#modal .box.small{max-width:380px}
+#modal .box.rcpt{max-width:340px;padding:14px}
+.stamp{position:absolute;top:40%;left:25%;font-size:64px;color:rgba(192,57,43,.25);transform:rotate(-20deg);font-weight:bold;pointer-events:none}
+.inv-head{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #1f3a5f;padding-bottom:10px;margin-bottom:14px}
+.inv-head h2{margin:0;color:#1f3a5f}
+.inv-meta{text-align:end}
+.tot{margin-top:12px;margin-inline-start:auto;width:260px}
+.tot div{display:flex;justify-content:space-between;padding:4px 0}
+.tot .grand{font-weight:bold;font-size:17px;border-top:2px solid #1f3a5f}
+.thanks{text-align:center;margin-top:30px;color:#566}
+.act{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
+.act select{width:auto}
+/* إيصال حراري */
+.rc{width:72mm;margin:0 auto;padding:3mm 0;color:#000;font-size:12px;line-height:1.4;font-family:Tahoma,Arial,sans-serif;position:relative}
+.rc.w58{width:50mm;font-size:11px}
+.rc .c{text-align:center}
+.rc .big{font-size:17px;font-weight:bold}
+.rc .xs{font-size:11px}
+.rc hr{border:0;border-top:1px dashed #000;margin:6px 0}
+.rc .kv{display:flex;justify-content:space-between;gap:6px}
+.rc .it{margin:5px 0}
+.rc .it .nm{font-weight:bold;word-break:break-word}
+.rc .it .mt{font-size:11px}
+.rc .it .ln{display:flex;justify-content:space-between;gap:6px}
+.rc .gt{font-size:15px;font-weight:bold}
+.rc .stamp{font-size:34px;left:10%;top:35%}
+@media(max-width:640px){input,select{font-size:16px}th,td{padding:7px 5px}main{padding:0 8px}.stat b{font-size:19px}}
+@media print{
+ header,main,.act{display:none!important}
+ html,body{background:#fff!important;height:auto!important;margin:0!important}
+ #modal{position:static!important;display:block!important;background:#fff!important;padding:0!important;overflow:visible!important}
+ #modal .box{box-shadow:none!important;max-width:none!important;margin:0!important;padding:0!important;border-radius:0!important;background:#fff!important}
+ *{-webkit-print-color-adjust:exact;print-color-adjust:exact}
+}
+</style>
+</head>
+<body>
+<header><div class="top"><h1 id="brand"></h1><div id="who"></div></div><nav id="nav"></nav></header>
+<main id="app"></main>
+<div id="modal"></div>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+const FB_CONFIG={apiKey:"AIzaSyCj732ngmhbs-iEuH8Rdwe-xK3c7Q43RNc",authDomain:"mk-kids.firebaseapp.com",projectId:"mk-kids",storageBucket:"mk-kids.firebasestorage.app",messagingSenderId:"531851369478",appId:"1:531851369478:web:7df0e2b34c551c1abf7787"};
+const ADMIN_EMAIL="men69429@gmail.com";
+const CONFIGURED=!!(FB_CONFIG.apiKey&&FB_CONFIG.projectId&&ADMIN_EMAIL);
+
+/* =====================  الترجمة / Çeviri / Translations  ===================== */
+const L={
+ar:{
+"tab.dash":"لوحة التحكم","tab.sales":"بيع جديد","tab.stock":"المخزون","tab.inv":"الفواتير","tab.exp":"المصاريف","tab.moves":"الحركات","tab.emp":"الموظفون والرواتب","tab.all":"كل الفروع","tab.set":"الإعدادات","tab.acct":"الحساب",
+"period.month":"هذا الشهر","period.prev":"الشهر الماضي","period.all":"كل الفترة","title.branch":"الفرع","title.period":"الفترة","lang.title":"اللغة",
+"on":"متصل","off":"بدون إنترنت","logout":"خروج","install":"تثبيت التطبيق","loading":"جاري التحميل...","loadingData":"جاري تحميل البيانات...",
+"fbfail":"تعذر تحميل Firebase. تأكد من اتصال الإنترنت ثم حدّث الصفحة.","nocfg":"البرنامج غير مُهيّأ.",
+"login.title":"تسجيل الدخول","login.email":"البريد الإلكتروني","login.pass":"كلمة السر","login.btn":"دخول","login.forgot":"نسيت كلمة السر",
+"login.ios":"لتثبيت التطبيق على الآيفون: اضغط زر المشاركة في Safari ثم <b>إضافة إلى الشاشة الرئيسية</b>.",
+"login.noBranch":"حسابك غير مرتبط بأي فرع. تواصل مع الإدارة.","pw.needEmail":"اكتب بريدك الإلكتروني أولاً","pw.sent":"تم إرسال رابط تغيير كلمة السر إلى {e}",
+"err.perm":"ليس لديك صلاحية لهذه العملية","err.net":"لا يوجد اتصال بالإنترنت، حاول مرة ثانية","err.gen":"حدث خطأ",
+"au.bad":"البريد أو كلمة السر غير صحيحة","au.many":"محاولات كثيرة، انتظر قليلاً ثم حاول","au.net":"لا يوجد اتصال بالإنترنت","au.weak":"كلمة السر ضعيفة (6 أحرف على الأقل)","au.env":"افتح البرنامج من رابط الموقع (https) وليس من الملف مباشرة",
+"d.sales":"المبيعات ({p})","d.profit":"الربح من المبيعات","d.exp":"المصاريف","d.sal":"الرواتب","d.net":"صافي الربح","d.stock":"قيمة المخزون (بسعر التكلفة)","d.count":"عدد الفواتير","d.low":"أصناف قاربت على النفاد","d.noLow":"لا يوجد أصناف ناقصة.",
+"th.item":"الصنف","th.avail":"المتوفر","th.min":"حد التنبيه","th.date":"التاريخ","th.branch":"الفرع","th.type":"النوع","th.qty":"الكمية","th.note":"ملاحظة","th.user":"المستخدم","th.code":"الرمز","th.cost":"التكلفة","th.sell":"البيع","th.price":"السعر","th.sum":"المجموع","th.no":"رقم","th.customer":"الزبون","th.total":"الإجمالي","th.by":"بواسطة","th.email":"البريد",
+"m.title":"سجل الحركات (آخر {n})","m.all":"كل الفروع","m.empty":"لا توجد حركات",
+"mv.sale":"بيع","mv.add":"إضافة كمية","mv.new":"صنف جديد","mv.edit":"تعديل صنف","mv.del":"حذف صنف","mv.cancel":"إلغاء فاتورة",
+"s.title":"فاتورة بيع جديدة","s.color":"اللون","s.addLine":"إضافة للفاتورة","s.needProducts":"أضف أصنافاً في تبويب المخزون أولاً.","s.del":"حذف","s.empty":"الفاتورة فارغة","s.customer":"اسم الزبون","s.discount":"الخصم","s.vat":"الضريبة ({v}%)","s.grand":"الإجمالي","s.save":"حفظ وإصدار الفاتورة","s.clear":"تفريغ","s.avail":"متوفر","s.badLine":"اختر صنفاً وكمية صحيحة","s.noItem":"الصنف “{n}” لم يعد موجوداً","s.noColor":"اللون “{c}” للصنف “{n}” غير موجود","s.exceed":"الكمية المطلوبة من “{n}” أكبر من المتوفر ({q})",
+"st.add":"إضافة صنف","st.edit":"تعديل صنف","f.name":"اسم الصنف","f.code":"الرمز / الباركود","f.cost":"سعر التكلفة","f.price":"سعر البيع","f.qty":"الكمية","f.min":"حد التنبيه","f.colors":"الألوان (كل لون بكميته)","f.colorName":"اسم اللون","f.addColor":"+ إضافة لون","f.qtyAuto":"الكمية تُحسب من مجموع الألوان","f.needName":"اكتب اسم الصنف","f.colorNeedName":"اكتب اسم اللون","f.badQty":"كمية غير صحيحة","f.colorDup":"اللون “{c}” مكرر",
+"btn.add":"إضافة","btn.saveEdit":"حفظ التعديل","btn.cancel":"إلغاء","btn.save":"حفظ","btn.close":"إغلاق","btn.edit":"تعديل","btn.delete":"حذف","btn.confirm":"تأكيد",
+"st.search":"بحث...","st.addQty":"+ كمية","st.empty":"لا يوجد أصناف","st.delConfirm":"حذف الصنف “{n}”؟","add.title":"إضافة كمية — {n}","add.newColor":"+ لون جديد","add.newColorName":"اسم اللون الجديد","add.bad":"أدخل كمية صحيحة",
+"i.title":"سجل الفواتير","i.empty":"لا يوجد فواتير في هذه الفترة","i.view":"عرض / طباعة","i.cancel":"إلغاء الفاتورة","i.cancelConfirm":"إلغاء الفاتورة؟ الكميات سترجع لمخزون الفرع، وتبقى الفاتورة في السجل كملغاة.","i.notFound":"الفاتورة غير موجودة","i.already":"الفاتورة ملغاة مسبقاً",
+"inv.title":"فاتورة","inv.no":"رقم: {n}","inv.date":"التاريخ: {d}","inv.customer":"الزبون","inv.cash":"زبون نقدي","inv.phone":"هاتف: {p}","inv.tax":"الرقم الضريبي: {t}","inv.thanks":"شكراً لتعاملكم معنا","inv.cancelled":"ملغاة","inv.print":"طباعة","inv.paper":"حجم الورق","inv.r80":"إيصال 80mm","inv.r58":"إيصال 58mm","inv.a4":"ورق A4",
+"x.add":"إضافة مصروف","x.date":"التاريخ","x.cat":"النوع","x.amount":"المبلغ","x.note":"ملاحظة","x.list":"المصاريف ({p}) — الإجمالي {t}","x.empty":"لا توجد مصاريف في هذه الفترة","x.badAmount":"اكتب مبلغاً صحيحاً","x.pickDate":"اختر التاريخ","x.outPeriod":"تمت الإضافة، لكنها خارج الفترة المعروضة. غيّر الفترة من الأعلى لتراها.","x.delConfirm":"حذف مصروف “{c}” بمبلغ {a}؟",
+"cat.rent":"إيجار","cat.utilities":"كهرباء وماء","cat.telecom":"اتصالات وإنترنت","cat.transport":"نقل وشحن","cat.maintenance":"صيانة","cat.marketing":"تسويق وإعلان","cat.supplies":"مستلزمات تشغيل","cat.taxes":"ضرائب ورسوم","cat.other":"أخرى",
+"e.add":"إضافة موظف","e.edit":"تعديل موظف","e.name":"الاسم","e.pos":"الوظيفة","e.phone":"الهاتف","e.salary":"الراتب الشهري","e.list":"موظفو {b}","th.paidFor":"المدفوع عن {m}","th.remain":"المتبقي","th.status":"الحالة","e.on":"يعمل","e.off":"متوقف","e.pay":"صرف راتب","e.stop":"إيقاف","e.start":"تفعيل","e.empty":"لا يوجد موظفون في هذا الفرع","e.hint":"لتبديل الفرع استخدم القائمة بالأعلى.","e.needName":"اكتب اسم الموظف","e.delConfirm":"حذف الموظف “{n}”؟ سجل رواتبه السابقة يبقى محفوظاً.",
+"p.title":"صرف راتب","p.emp":"الموظف","p.month":"عن شهر","p.base":"الراتب الأساسي","p.bonus":"مكافأة / إضافي","p.ded":"خصم / سلفة","p.note":"ملاحظة","p.btn":"صرف الراتب","p.hist":"سجل الرواتب ({p}) — الإجمالي {t}","p.empty":"لا توجد رواتب في هذه الفترة","p.pickEmp":"اختر موظفاً","p.pickMonth":"اختر الشهر","p.badNet":"صافي المبلغ يجب أن يكون أكبر من صفر","p.confirm":"صرف {a} {c} للموظف {n} عن شهر {m}؟","p.dup":"تنبيه: تم صرف {a} لنفس الشهر سابقاً.","p.outPeriod":"تم الصرف، لكنه عن شهر خارج الفترة المعروضة. غيّر الفترة من الأعلى لتراه.","p.delConfirm":"حذف صرف راتب {n} عن {m} بمبلغ {a}؟",
+"th.month":"الشهر","th.employee":"الموظف","th.base":"الأساسي","th.bonus":"مكافأة","th.ded":"خصم","th.net":"الصافي","th.paidOn":"تاريخ الصرف",
+"a.title":"مقارنة الفروع ({p})","a.cats":"المصاريف حسب النوع ({p})","a.stock":"المخزون في كل الفروع","a.noExp":"لا توجد مصاريف","a.noItems":"لا يوجد أصناف","th.invoices":"الفواتير","th.sales":"المبيعات","th.profit":"الربح من المبيعات","th.exp":"المصاريف","th.sal":"الرواتب","th.netProfit":"صافي الربح","th.stockVal":"قيمة المخزون","th.lowCount":"أصناف ناقصة",
+"set.company":"بيانات الشركة (تظهر على الفاتورة)","set.cname":"اسم الشركة","set.addr":"العنوان","set.phone":"الهاتف","set.taxno":"الرقم الضريبي","set.cur":"العملة","set.vatp":"نسبة الضريبة %","set.saved":"تم الحفظ",
+"set.branches":"الفروع","set.bname":"اسم الفرع ({id})","set.bprefix":"بادئة ترقيم الفواتير","set.saveBr":"حفظ الفروع",
+"set.users":"مستخدمو الفروع","set.usersHint":"كل فرع يدخل ببريد وكلمة سر، ويشوف فرعه فقط. أنشئ حساب لكل جهاز/موظف وحدّد فرعه.","set.revoke":"سحب الصلاحية","set.noUsers":"لا يوجد مستخدمون بعد","set.uemail":"بريد المستخدم","set.upass":"كلمة سر (6 أحرف فأكثر)","set.uadd":"إضافة مستخدم","set.needEmailPass":"اكتب البريد وكلمة السر","set.isAdminMail":"هذا بريد الإدارة","set.userAdded":"تمت الإضافة. أعطِ المستخدم البريد وكلمة السر ليدخل من جهازه.","set.revokeConfirm":"سحب صلاحية {e}؟",
+"set.backup":"نسخ احتياطي واستيراد","set.dl":"تنزيل نسخة احتياطية (الفترة المعروضة)","set.import":"استيراد بيانات من النسخة القديمة (الملف المحلي)","set.badFile":"ملف غير صالح","set.importConfirm":"سيتم استيراد:\n{s}\nمتابعة؟","set.imported":"تم الاستيراد","set.impLine":"{b}: {p} صنف، {i} فاتورة",
+"acct.title":"حسابي","acct.admin":"إدارة","acct.reset":"إرسال رابط تغيير كلمة السر لبريدي","acct.logout":"تسجيل الخروج"
+},
+tr:{
+"tab.dash":"Panel","tab.sales":"Yeni Satış","tab.stock":"Stok","tab.inv":"Faturalar","tab.exp":"Giderler","tab.moves":"Hareketler","tab.emp":"Çalışanlar ve Maaşlar","tab.all":"Tüm Şubeler","tab.set":"Ayarlar","tab.acct":"Hesap",
+"period.month":"Bu Ay","period.prev":"Geçen Ay","period.all":"Tüm Dönem","title.branch":"Şube","title.period":"Dönem","lang.title":"Dil",
+"on":"Çevrimiçi","off":"Çevrimdışı","logout":"Çıkış","install":"Uygulamayı Yükle","loading":"Yükleniyor...","loadingData":"Veriler yükleniyor...",
+"fbfail":"Firebase yüklenemedi. İnternet bağlantınızı kontrol edip sayfayı yenileyin.","nocfg":"Program yapılandırılmamış.",
+"login.title":"Giriş Yap","login.email":"E-posta","login.pass":"Şifre","login.btn":"Giriş","login.forgot":"Şifremi unuttum",
+"login.ios":"iPhone'a yüklemek için: Safari'de Paylaş düğmesine dokunun, ardından <b>Ana Ekrana Ekle</b>'yi seçin.",
+"login.noBranch":"Hesabınız hiçbir şubeyle ilişkilendirilmemiş. Yönetimle iletişime geçin.","pw.needEmail":"Önce e-posta adresinizi yazın","pw.sent":"Şifre yenileme bağlantısı {e} adresine gönderildi",
+"err.perm":"Bu işlem için yetkiniz yok","err.net":"İnternet bağlantısı yok, tekrar deneyin","err.gen":"Bir hata oluştu",
+"au.bad":"E-posta veya şifre hatalı","au.many":"Çok fazla deneme, biraz bekleyip tekrar deneyin","au.net":"İnternet bağlantısı yok","au.weak":"Şifre zayıf (en az 6 karakter)","au.env":"Programı dosyadan değil, site bağlantısından (https) açın",
+"d.sales":"Satışlar ({p})","d.profit":"Satış Kârı","d.exp":"Giderler","d.sal":"Maaşlar","d.net":"Net Kâr","d.stock":"Stok Değeri (maliyet fiyatıyla)","d.count":"Fatura Sayısı","d.low":"Tükenmek Üzere Olan Ürünler","d.noLow":"Eksik ürün yok.",
+"th.item":"Ürün","th.avail":"Mevcut","th.min":"Uyarı Limiti","th.date":"Tarih","th.branch":"Şube","th.type":"Tür","th.qty":"Adet","th.note":"Not","th.user":"Kullanıcı","th.code":"Kod","th.cost":"Maliyet","th.sell":"Satış","th.price":"Fiyat","th.sum":"Toplam","th.no":"No","th.customer":"Müşteri","th.total":"Genel Toplam","th.by":"İşlemi Yapan","th.email":"E-posta",
+"m.title":"Hareket Kaydı (son {n})","m.all":"Tüm Şubeler","m.empty":"Hareket yok",
+"mv.sale":"Satış","mv.add":"Stok Ekleme","mv.new":"Yeni Ürün","mv.edit":"Ürün Düzenleme","mv.del":"Ürün Silme","mv.cancel":"Fatura İptali",
+"s.title":"Yeni Satış Faturası","s.color":"Renk","s.addLine":"Faturaya Ekle","s.needProducts":"Önce Stok sekmesinden ürün ekleyin.","s.del":"Sil","s.empty":"Fatura boş","s.customer":"Müşteri Adı","s.discount":"İndirim","s.vat":"KDV (%{v})","s.grand":"Genel Toplam","s.save":"Kaydet ve Fatura Kes","s.clear":"Temizle","s.avail":"mevcut","s.badLine":"Geçerli bir ürün ve adet seçin","s.noItem":"“{n}” ürünü artık yok","s.noColor":"“{n}” ürününde “{c}” rengi yok","s.exceed":"“{n}” için istenen adet mevcut stoktan fazla ({q})",
+"st.add":"Ürün Ekle","st.edit":"Ürünü Düzenle","f.name":"Ürün Adı","f.code":"Kod / Barkod","f.cost":"Maliyet Fiyatı","f.price":"Satış Fiyatı","f.qty":"Adet","f.min":"Uyarı Limiti","f.colors":"Renkler (her rengin adedi)","f.colorName":"Renk adı","f.addColor":"+ Renk Ekle","f.qtyAuto":"Adet, renklerin toplamından hesaplanır","f.needName":"Ürün adını yazın","f.colorNeedName":"Renk adını yazın","f.badQty":"Geçersiz adet","f.colorDup":"“{c}” rengi tekrarlanıyor",
+"btn.add":"Ekle","btn.saveEdit":"Değişikliği Kaydet","btn.cancel":"İptal","btn.save":"Kaydet","btn.close":"Kapat","btn.edit":"Düzenle","btn.delete":"Sil","btn.confirm":"Onayla",
+"st.search":"Ara...","st.addQty":"+ Adet","st.empty":"Ürün yok","st.delConfirm":"“{n}” ürünü silinsin mi?","add.title":"Stok Ekle — {n}","add.newColor":"+ Yeni renk","add.newColorName":"Yeni renk adı","add.bad":"Geçerli bir adet girin",
+"i.title":"Fatura Kayıtları","i.empty":"Bu dönemde fatura yok","i.view":"Görüntüle / Yazdır","i.cancel":"Faturayı İptal Et","i.cancelConfirm":"Fatura iptal edilsin mi? Adetler şube stoğuna geri döner, fatura kayıtlarda iptal olarak kalır.","i.notFound":"Fatura bulunamadı","i.already":"Fatura zaten iptal edilmiş",
+"inv.title":"FATURA","inv.no":"No: {n}","inv.date":"Tarih: {d}","inv.customer":"Müşteri","inv.cash":"Peşin Müşteri","inv.phone":"Tel: {p}","inv.tax":"Vergi No: {t}","inv.thanks":"Bizi tercih ettiğiniz için teşekkürler","inv.cancelled":"İPTAL","inv.print":"Yazdır","inv.paper":"Kağıt boyutu","inv.r80":"Fiş 80mm","inv.r58":"Fiş 58mm","inv.a4":"A4 kağıt",
+"x.add":"Gider Ekle","x.date":"Tarih","x.cat":"Tür","x.amount":"Tutar","x.note":"Not","x.list":"Giderler ({p}) — Toplam {t}","x.empty":"Bu dönemde gider yok","x.badAmount":"Geçerli bir tutar yazın","x.pickDate":"Tarihi seçin","x.outPeriod":"Eklendi, ancak gösterilen dönemin dışında. Görmek için yukarıdan dönemi değiştirin.","x.delConfirm":"“{c}” giderini ({a}) silmek istiyor musunuz?",
+"cat.rent":"Kira","cat.utilities":"Elektrik ve Su","cat.telecom":"İletişim ve İnternet","cat.transport":"Nakliye ve Kargo","cat.maintenance":"Bakım ve Onarım","cat.marketing":"Pazarlama ve Reklam","cat.supplies":"İşletme Malzemeleri","cat.taxes":"Vergi ve Harçlar","cat.other":"Diğer",
+"e.add":"Çalışan Ekle","e.edit":"Çalışanı Düzenle","e.name":"Ad Soyad","e.pos":"Görev","e.phone":"Telefon","e.salary":"Aylık Maaş","e.list":"{b} Çalışanları","th.paidFor":"{m} için ödenen","th.remain":"Kalan","th.status":"Durum","e.on":"Çalışıyor","e.off":"Durduruldu","e.pay":"Maaş Öde","e.stop":"Durdur","e.start":"Etkinleştir","e.empty":"Bu şubede çalışan yok","e.hint":"Şubeyi değiştirmek için yukarıdaki listeyi kullanın.","e.needName":"Çalışanın adını yazın","e.delConfirm":"“{n}” çalışanı silinsin mi? Önceki maaş kayıtları saklanır.",
+"p.title":"Maaş Öde","p.emp":"Çalışan","p.month":"Ay","p.base":"Temel Maaş","p.bonus":"Prim / Ek","p.ded":"Kesinti / Avans","p.note":"Not","p.btn":"Maaşı Öde","p.hist":"Maaş Kayıtları ({p}) — Toplam {t}","p.empty":"Bu dönemde maaş ödemesi yok","p.pickEmp":"Çalışan seçin","p.pickMonth":"Ayı seçin","p.badNet":"Net tutar sıfırdan büyük olmalı","p.confirm":"{n} için {m} ayına {a} {c} ödensin mi?","p.dup":"Uyarı: Aynı ay için daha önce {a} ödendi.","p.outPeriod":"Ödendi, ancak gösterilen dönemin dışındaki bir aya ait. Görmek için yukarıdan dönemi değiştirin.","p.delConfirm":"{n} çalışanının {m} maaş ödemesi ({a}) silinsin mi?",
+"th.month":"Ay","th.employee":"Çalışan","th.base":"Temel","th.bonus":"Prim","th.ded":"Kesinti","th.net":"Net","th.paidOn":"Ödeme Tarihi",
+"a.title":"Şube Karşılaştırması ({p})","a.cats":"Türe Göre Giderler ({p})","a.stock":"Tüm Şubelerde Stok","a.noExp":"Gider yok","a.noItems":"Ürün yok","th.invoices":"Faturalar","th.sales":"Satışlar","th.profit":"Satış Kârı","th.exp":"Giderler","th.sal":"Maaşlar","th.netProfit":"Net Kâr","th.stockVal":"Stok Değeri","th.lowCount":"Eksik Ürün",
+"set.company":"Şirket Bilgileri (faturada görünür)","set.cname":"Şirket Adı","set.addr":"Adres","set.phone":"Telefon","set.taxno":"Vergi Numarası","set.cur":"Para Birimi","set.vatp":"KDV Oranı %","set.saved":"Kaydedildi",
+"set.branches":"Şubeler","set.bname":"Şube adı ({id})","set.bprefix":"Fatura numarası öneki","set.saveBr":"Şubeleri Kaydet",
+"set.users":"Şube Kullanıcıları","set.usersHint":"Her şube e-posta ve şifreyle girer ve yalnızca kendi şubesini görür. Her cihaz/çalışan için bir hesap oluşturup şubesini seçin.","set.revoke":"Yetkiyi Kaldır","set.noUsers":"Henüz kullanıcı yok","set.uemail":"Kullanıcı e-postası","set.upass":"Şifre (en az 6 karakter)","set.uadd":"Kullanıcı Ekle","set.needEmailPass":"E-posta ve şifreyi yazın","set.isAdminMail":"Bu yönetim e-postasıdır","set.userAdded":"Eklendi. Kullanıcıya e-posta ve şifreyi verin, kendi cihazından girsin.","set.revokeConfirm":"{e} yetkisi kaldırılsın mı?",
+"set.backup":"Yedekleme ve İçe Aktarma","set.dl":"Yedek indir (gösterilen dönem)","set.import":"Eski sürümden veri aktar (yerel dosya)","set.badFile":"Geçersiz dosya","set.importConfirm":"İçe aktarılacak:\n{s}\nDevam edilsin mi?","set.imported":"İçe aktarıldı","set.impLine":"{b}: {p} ürün, {i} fatura",
+"acct.title":"Hesabım","acct.admin":"Yönetim","acct.reset":"Şifre yenileme bağlantısını e-postama gönder","acct.logout":"Çıkış Yap"
+},
+en:{
+"tab.dash":"Dashboard","tab.sales":"New Sale","tab.stock":"Inventory","tab.inv":"Invoices","tab.exp":"Expenses","tab.moves":"Movements","tab.emp":"Staff & Payroll","tab.all":"All Branches","tab.set":"Settings","tab.acct":"Account",
+"period.month":"This month","period.prev":"Last month","period.all":"All time","title.branch":"Branch","title.period":"Period","lang.title":"Language",
+"on":"Online","off":"Offline","logout":"Log out","install":"Install app","loading":"Loading...","loadingData":"Loading data...",
+"fbfail":"Could not load Firebase. Check your internet connection and refresh the page.","nocfg":"The app is not configured.",
+"login.title":"Sign in","login.email":"Email","login.pass":"Password","login.btn":"Sign in","login.forgot":"Forgot password",
+"login.ios":"To install on iPhone: tap the Share button in Safari, then <b>Add to Home Screen</b>.",
+"login.noBranch":"Your account is not linked to any branch. Contact the administrator.","pw.needEmail":"Enter your email first","pw.sent":"A password reset link was sent to {e}",
+"err.perm":"You do not have permission for this action","err.net":"No internet connection, please try again","err.gen":"An error occurred",
+"au.bad":"Incorrect email or password","au.many":"Too many attempts, wait a moment and try again","au.net":"No internet connection","au.weak":"Weak password (at least 6 characters)","au.env":"Open the app from the website link (https), not from the file directly",
+"d.sales":"Sales ({p})","d.profit":"Profit from sales","d.exp":"Expenses","d.sal":"Salaries","d.net":"Net profit","d.stock":"Stock value (at cost)","d.count":"Invoices","d.low":"Items running low","d.noLow":"No items running low.",
+"th.item":"Item","th.avail":"In stock","th.min":"Alert level","th.date":"Date","th.branch":"Branch","th.type":"Type","th.qty":"Qty","th.note":"Note","th.user":"User","th.code":"Code","th.cost":"Cost","th.sell":"Price","th.price":"Price","th.sum":"Total","th.no":"No.","th.customer":"Customer","th.total":"Total","th.by":"By","th.email":"Email",
+"m.title":"Movement log (last {n})","m.all":"All branches","m.empty":"No movements",
+"mv.sale":"Sale","mv.add":"Stock added","mv.new":"New item","mv.edit":"Item edited","mv.del":"Item deleted","mv.cancel":"Invoice cancelled",
+"s.title":"New sales invoice","s.color":"Color","s.addLine":"Add to invoice","s.needProducts":"Add items in the Inventory tab first.","s.del":"Remove","s.empty":"The invoice is empty","s.customer":"Customer name","s.discount":"Discount","s.vat":"VAT ({v}%)","s.grand":"Total","s.save":"Save and issue invoice","s.clear":"Clear","s.avail":"in stock","s.badLine":"Choose an item and a valid quantity","s.noItem":"Item “{n}” no longer exists","s.noColor":"Color “{c}” of item “{n}” does not exist","s.exceed":"Requested quantity of “{n}” exceeds stock ({q})",
+"st.add":"Add item","st.edit":"Edit item","f.name":"Item name","f.code":"Code / Barcode","f.cost":"Cost price","f.price":"Selling price","f.qty":"Quantity","f.min":"Alert level","f.colors":"Colors (quantity per color)","f.colorName":"Color name","f.addColor":"+ Add color","f.qtyAuto":"Quantity is the sum of the colors","f.needName":"Enter the item name","f.colorNeedName":"Enter the color name","f.badQty":"Invalid quantity","f.colorDup":"Color “{c}” is duplicated",
+"btn.add":"Add","btn.saveEdit":"Save changes","btn.cancel":"Cancel","btn.save":"Save","btn.close":"Close","btn.edit":"Edit","btn.delete":"Delete","btn.confirm":"Confirm",
+"st.search":"Search...","st.addQty":"+ Qty","st.empty":"No items","st.delConfirm":"Delete item “{n}”?","add.title":"Add stock — {n}","add.newColor":"+ New color","add.newColorName":"New color name","add.bad":"Enter a valid quantity",
+"i.title":"Invoice log","i.empty":"No invoices in this period","i.view":"View / Print","i.cancel":"Cancel invoice","i.cancelConfirm":"Cancel this invoice? The quantities return to the branch stock and the invoice stays in the log as cancelled.","i.notFound":"Invoice not found","i.already":"The invoice is already cancelled",
+"inv.title":"INVOICE","inv.no":"No: {n}","inv.date":"Date: {d}","inv.customer":"Customer","inv.cash":"Cash customer","inv.phone":"Tel: {p}","inv.tax":"Tax ID: {t}","inv.thanks":"Thank you for your business","inv.cancelled":"CANCELLED","inv.print":"Print","inv.paper":"Paper size","inv.r80":"Receipt 80mm","inv.r58":"Receipt 58mm","inv.a4":"A4 paper",
+"x.add":"Add expense","x.date":"Date","x.cat":"Type","x.amount":"Amount","x.note":"Note","x.list":"Expenses ({p}) — Total {t}","x.empty":"No expenses in this period","x.badAmount":"Enter a valid amount","x.pickDate":"Choose the date","x.outPeriod":"Added, but it is outside the period shown. Change the period at the top to see it.","x.delConfirm":"Delete the “{c}” expense of {a}?",
+"cat.rent":"Rent","cat.utilities":"Electricity & water","cat.telecom":"Phone & internet","cat.transport":"Transport & shipping","cat.maintenance":"Maintenance","cat.marketing":"Marketing & ads","cat.supplies":"Operating supplies","cat.taxes":"Taxes & fees","cat.other":"Other",
+"e.add":"Add employee","e.edit":"Edit employee","e.name":"Name","e.pos":"Position","e.phone":"Phone","e.salary":"Monthly salary","e.list":"{b} employees","th.paidFor":"Paid for {m}","th.remain":"Remaining","th.status":"Status","e.on":"Active","e.off":"Inactive","e.pay":"Pay salary","e.stop":"Deactivate","e.start":"Activate","e.empty":"No employees in this branch","e.hint":"Use the list at the top to switch branch.","e.needName":"Enter the employee name","e.delConfirm":"Delete employee “{n}”? Their past payroll records are kept.",
+"p.title":"Pay salary","p.emp":"Employee","p.month":"For month","p.base":"Base salary","p.bonus":"Bonus / extra","p.ded":"Deduction / advance","p.note":"Note","p.btn":"Pay salary","p.hist":"Payroll log ({p}) — Total {t}","p.empty":"No salary payments in this period","p.pickEmp":"Choose an employee","p.pickMonth":"Choose the month","p.badNet":"The net amount must be greater than zero","p.confirm":"Pay {a} {c} to {n} for {m}?","p.dup":"Note: {a} was already paid for the same month.","p.outPeriod":"Paid, but it belongs to a month outside the period shown. Change the period at the top to see it.","p.delConfirm":"Delete the salary payment of {n} for {m} ({a})?",
+"th.month":"Month","th.employee":"Employee","th.base":"Base","th.bonus":"Bonus","th.ded":"Deduction","th.net":"Net","th.paidOn":"Paid on",
+"a.title":"Branch comparison ({p})","a.cats":"Expenses by type ({p})","a.stock":"Stock across all branches","a.noExp":"No expenses","a.noItems":"No items","th.invoices":"Invoices","th.sales":"Sales","th.profit":"Profit from sales","th.exp":"Expenses","th.sal":"Salaries","th.netProfit":"Net profit","th.stockVal":"Stock value","th.lowCount":"Low items",
+"set.company":"Company details (shown on the invoice)","set.cname":"Company name","set.addr":"Address","set.phone":"Phone","set.taxno":"Tax ID","set.cur":"Currency","set.vatp":"VAT rate %","set.saved":"Saved",
+"set.branches":"Branches","set.bname":"Branch name ({id})","set.bprefix":"Invoice number prefix","set.saveBr":"Save branches",
+"set.users":"Branch users","set.usersHint":"Each branch signs in with an email and password and sees its own branch only. Create an account for each device/employee and choose its branch.","set.revoke":"Revoke access","set.noUsers":"No users yet","set.uemail":"User email","set.upass":"Password (6+ characters)","set.uadd":"Add user","set.needEmailPass":"Enter the email and password","set.isAdminMail":"This is the administrator email","set.userAdded":"Added. Give the user the email and password to sign in from their device.","set.revokeConfirm":"Revoke access for {e}?",
+"set.backup":"Backup & import","set.dl":"Download backup (period shown)","set.import":"Import data from the old version (local file)","set.badFile":"Invalid file","set.importConfirm":"Will import:\n{s}\nContinue?","set.imported":"Imported","set.impLine":"{b}: {p} items, {i} invoices",
+"acct.title":"My account","acct.admin":"Admin","acct.reset":"Send a password reset link to my email","acct.logout":"Log out"
+}
+};
+let lang='ar';
+try{const s=localStorage.getItem('mk_lang');if(s&&L[s])lang=s;else{const n=(navigator.language||'').slice(0,2).toLowerCase();if(L[n])lang=n}}catch(e){}
+function tt(k,p){
+ let s=L[lang]&&L[lang][k];
+ if(s===undefined)s=L.ar[k];
+ if(s===undefined)return k;
+ if(p)for(const x in p)s=s.split('{'+x+'}').join(p[x]);
+ return s;
+}
+function applyLang(){document.documentElement.lang=lang;document.documentElement.dir=lang==='ar'?'rtl':'ltr'}
+applyLang();
+const langSel=()=>`<select class="lg" title="${tt('lang.title')}" onchange="setLang(this.value)">${[['ar','العربية'],['tr','Türkçe'],['en','English']].map(([k,n])=>`<option value="${k}" ${k==lang?'selected':''}>${n}</option>`).join('')}</select>`;
+function setLang(v){
+ if(!L[v])return;lang=v;
+ try{localStorage.setItem('mk_lang',v)}catch(e){}
+ applyLang();render();
+ if(curInv&&document.getElementById('modal').style.display==='block')showInv(curInv);else closeModal();
+}
+const getPaper=()=>{try{const p=localStorage.getItem('mk_paper');if(['80','58','a4'].includes(p))return p}catch(e){}return '80'};
+function setPaper(v){try{localStorage.setItem('mk_paper',v)}catch(e){}if(curInv)showInv(curInv)}
+
+/* =====================  أدوات  ===================== */
+const esc=s=>String(s??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const ltr=s=>`<bdi dir="ltr">${esc(s)}</bdi>`;
+const num=n=>Number(n||0).toLocaleString('en-US',{maximumFractionDigits:2});
+const fmt=d=>{const x=new Date(d);return x.toLocaleDateString('en-GB')+' '+x.toLocaleTimeString('en-GB',{hour:'2-digit',minute:'2-digit'})};
+const dshort=d=>new Date(d).toLocaleDateString('en-GB');
+const pad2=n=>String(n).padStart(2,'0');
+const ymOf=d=>d.getFullYear()+'-'+pad2(d.getMonth()+1);
+const todayStr=()=>{const d=new Date();return d.getFullYear()+'-'+pad2(d.getMonth()+1)+'-'+pad2(d.getDate())};
+const DEF={name:'MK Kids',address:'',phone:'',tax:'',currency:'$',vat:0};
+const CATS=['rent','utilities','telecom','transport','maintenance','marketing','supplies','taxes','other'];
+const catName=c=>L.ar['cat.'+c]!==undefined?tt('cat.'+c):c;
+const mvName=m=>L.ar['mv.'+m]!==undefined?tt('mv.'+m):m;
+
+let auth,db,me=null,authReady=false,loginMsg='';
+let S={settings:{...DEF},branches:{},cur:null},D={},U=[];
+let tab='dash',cart=[],cust='',disc=0,editId=null,q='',period='month',mvf='all',dirty=false;
+let selP=null,selC='',draft={},fc=[],editEmp=null,payFor=null,curInv=null;
+let unsubs=[],bunsubs=[],subKey='';
+
+const money=n=>num(n)+' '+esc(S.settings.currency);
+const isAdmin=()=>!!me&&me.role==='admin';
+const P=b=>(D[b]&&D[b].products)||[];
+const I=b=>(D[b]&&D[b].invoices)||[];
+const E=b=>(D[b]&&D[b].expenses)||[];
+const EM=b=>(D[b]&&D[b].employees)||[];
+const PR=b=>(D[b]&&D[b].payroll)||[];
+const bname=id=>(S.branches[id]&&S.branches[id].name)||id;
+const byName=(a,b)=>String(a.name).localeCompare(String(b.name),lang==='ar'?'ar':lang);
+const sumColors=cs=>cs.reduce((a,c)=>a+(+c.q||0),0);
+const periodLabel=()=>tt('period.'+period);
+
+function errMsg(e){
+ const c=(e&&e.code)||'';
+ if(c.includes('permission-denied'))return tt('err.perm');
+ if(c.includes('unavailable')||c.includes('network'))return tt('err.net');
+ return (e&&e.message)||tt('err.gen');
+}
+function authErr(x){
+ const c=(x&&x.code)||'';
+ if(['auth/invalid-credential','auth/wrong-password','auth/user-not-found','auth/invalid-email'].includes(c))return tt('au.bad');
+ if(c==='auth/too-many-requests')return tt('au.many');
+ if(c==='auth/network-request-failed')return tt('au.net');
+ if(c==='auth/weak-password')return tt('au.weak');
+ if(c==='auth/operation-not-supported-in-this-environment')return tt('au.env');
+ return (x&&x.message)||tt('err.gen');
+}
+const fire=p=>p.catch(e=>alert(errMsg(e)));
+
+/* =====================  الدخول والاشتراك بالبيانات  ===================== */
+function stopAll(){
+ unsubs.forEach(f=>f());bunsubs.forEach(f=>f());
+ unsubs=[];bunsubs=[];subKey='';D={};U=[];S.branches={};S.cur=null;
+}
+async function onAuth(u){
+ authReady=true;stopAll();
+ if(!u){me=null;render();return}
+ const email=(u.email||'').toLowerCase();
+ if(email===ADMIN_EMAIL.toLowerCase()){me={email,role:'admin'}}
+ else{
+  let d=null;
+  try{d=await db.doc('users/'+email).get()}catch(e){}
+  if(!d||!d.exists||!d.data().branch){loginMsg=tt('login.noBranch');await auth.signOut();return}
+  me={email,role:'branch',branch:d.data().branch};
+ }
+ loginMsg='';tab='dash';
+ startListeners();render();
+}
+function startListeners(){
+ const lerr=e=>console.error(e);
+ unsubs.push(db.doc('settings/company').onSnapshot(s=>{if(s.exists)S.settings={...DEF,...s.data()};refresh()},lerr));
+ if(isAdmin()){
+  db.collection('branches').get({source:'server'}).then(s=>{if(s.empty)return seed()}).catch(()=>{});
+  db.doc('settings/company').get({source:'server'}).then(s=>{if(!s.exists)return db.doc('settings/company').set(DEF)}).catch(()=>{});
+  unsubs.push(db.collection('branches').onSnapshot(s=>{
+   S.branches={};s.forEach(d=>S.branches[d.id]={id:d.id,...d.data()});
+   const ids=Object.keys(S.branches).sort();
+   if(!S.cur||!S.branches[S.cur])S.cur=ids[0]||null;
+   subscribeBranches();refresh();
+  },lerr));
+  unsubs.push(db.collection('users').onSnapshot(s=>{U=s.docs.map(d=>({email:d.id,...d.data()}));if(tab==='set')refresh()},lerr));
+ }else{
+  S.cur=me.branch;
+  unsubs.push(db.doc('branches/'+me.branch).onSnapshot(d=>{
+   if(d.exists)S.branches={[d.id]:{id:d.id,...d.data()}};
+   subscribeBranches();refresh();
+  },lerr));
+ }
+}
+function seed(){
+ const b=db.batch();
+ [1,2,3,4].forEach(n=>b.set(db.doc('branches/b'+n),{name:'Branch '+n,prefix:String.fromCharCode(64+n),counter:1}));
+ return b.commit();
+}
+function range(){
+ if(period==='all')return [null,null];
+ const n=new Date(),y=n.getFullYear(),m=n.getMonth();
+ const cur=period==='month';
+ return [new Date(y,cur?m:m-1,1).toISOString(),new Date(y,cur?m+1:m,1).toISOString()];
+}
+function mrange(){
+ if(period==='all')return [null,null];
+ const n=new Date(),y=n.getFullYear(),m=n.getMonth(),cur=period==='month';
+ return [ymOf(new Date(y,cur?m:m-1,1)),ymOf(new Date(y,cur?m+1:m,1))];
+}
+function subscribeBranches(){
+ const ids=Object.keys(S.branches).sort();
+ const key=ids.join(',')+'|'+period;
+ if(key===subKey)return;
+ subKey=key;bunsubs.forEach(f=>f());bunsubs=[];
+ const [from,to]=range(),[fm,tm]=mrange(),lerr=e=>console.error(e);
+ ids.forEach(id=>{
+  D[id]=D[id]||{products:[],invoices:[],moves:[],expenses:[],employees:[],payroll:[]};
+  bunsubs.push(db.collection(`branches/${id}/products`).onSnapshot(s=>{D[id].products=s.docs.map(x=>({id:x.id,...x.data()})).sort(byName);refresh()},lerr));
+  let iq=db.collection(`branches/${id}/invoices`);
+  if(from)iq=iq.where('date','>=',from);
+  if(to)iq=iq.where('date','<',to);
+  bunsubs.push(iq.onSnapshot(s=>{D[id].invoices=s.docs.map(x=>({id:x.id,...x.data()})).sort((a,b)=>b.date.localeCompare(a.date));refresh()},lerr));
+  bunsubs.push(db.collection(`branches/${id}/moves`).orderBy('date','desc').limit(150).onSnapshot(s=>{D[id].moves=s.docs.map(x=>({id:x.id,...x.data()}));refresh()},lerr));
+  let eq=db.collection(`branches/${id}/expenses`);
+  if(from)eq=eq.where('date','>=',from);
+  if(to)eq=eq.where('date','<',to);
+  bunsubs.push(eq.onSnapshot(s=>{D[id].expenses=s.docs.map(x=>({id:x.id,...x.data()}));refresh()},lerr));
+  if(isAdmin()){
+   let pq=db.collection(`branches/${id}/payroll`);
+   if(fm)pq=pq.where('month','>=',fm);
+   if(tm)pq=pq.where('month','<',tm);
+   bunsubs.push(pq.onSnapshot(s=>{D[id].payroll=s.docs.map(x=>({id:x.id,...x.data()}));refresh()},lerr));
+   bunsubs.push(db.collection(`branches/${id}/employees`).onSnapshot(s=>{D[id].employees=s.docs.map(x=>({id:x.id,...x.data()}));refresh()},lerr));
+  }
+ });
+}
+async function login(){
+ const e=document.getElementById('le').value.trim(),p=document.getElementById('lp').value;
+ loginMsg='';
+ try{await auth.signInWithEmailAndPassword(e,p)}catch(x){loginMsg=authErr(x);render()}
+}
+async function resetPw(){
+ const el=document.getElementById('le');const e=el?el.value.trim():(me&&me.email);
+ if(!e)return alert(tt('pw.needEmail'));
+ try{await auth.sendPasswordResetEmail(e);alert(tt('pw.sent',{e}))}catch(x){alert(authErr(x))}
+}
+function logout(){auth.signOut()}
+
+/* =====================  العرض  ===================== */
+function refresh(){
+ const a=document.activeElement,app=document.getElementById('app');
+ if(a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName)&&app.contains(a)){dirty=true;return}
+ render();
+}
+document.addEventListener('focusout',()=>setTimeout(()=>{
+ if(!dirty)return;
+ const a=document.activeElement;
+ if(a&&['INPUT','SELECT','TEXTAREA'].includes(a.tagName)&&document.getElementById('app').contains(a))return;
+ render();
+},60));
+let deferredInstall=null;
+window.addEventListener('beforeinstallprompt',e=>{e.preventDefault();deferredInstall=e;render()});
+window.addEventListener('appinstalled',()=>{deferredInstall=null;render()});
+async function installApp(){if(!deferredInstall)return;deferredInstall.prompt();try{await deferredInstall.userChoice}catch(e){}deferredInstall=null;render()}
+function installHint(){
+ const ios=/iphone|ipad|ipod/i.test(navigator.userAgent||'');
+ const sa=navigator.standalone===true||(typeof matchMedia==='function'&&matchMedia('(display-mode: standalone)').matches);
+ if(sa)return '';
+ if(ios)return `<p style="font-size:13px;color:#566;margin-top:14px">${tt('login.ios')}</p>`;
+ if(deferredInstall)return `<div class="act"><button class="b" onclick="installApp()">${tt('install')}</button></div>`;
+ return '';
+}
+window.addEventListener('online',()=>render());
+window.addEventListener('offline',()=>render());
+
+function tabsList(){
+ const tb=[['dash'],['sales'],['stock'],['inv'],['exp'],['moves']];
+ if(isAdmin())tb.push(['emp'],['all']);
+ tb.push(['set']);
+ return tb.map(x=>[x[0],x[0]==='set'&&!isAdmin()?tt('tab.acct'):tt('tab.'+x[0])]);
+}
+function plain(){
+ document.getElementById('brand').textContent='MK Kids';
+ document.getElementById('nav').innerHTML='';
+ document.getElementById('who').innerHTML=langSel();
+}
+function render(){
+ dirty=false;
+ const app=document.getElementById('app');
+ if(!CONFIGURED){plain();app.innerHTML=`<div class="card">${tt('nocfg')}</div>`;return}
+ if(typeof firebase==='undefined'){plain();app.innerHTML=`<div class="card low">${tt('fbfail')}</div>`;return}
+ if(!authReady){plain();app.innerHTML=`<div class="card">${tt('loading')}</div>`;return}
+ if(!me)return loginView();
+ const tl=tabsList();if(!tl.some(x=>x[0]===tab))tab='dash';
+ document.getElementById('brand').textContent=S.settings.name+(S.cur?' — '+bname(S.cur):'');
+ document.title=S.settings.name;
+ let nav=tl.map(x=>`<button class="${tab==x[0]?'on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
+ if(isAdmin())nav+=`<select title="${tt('title.branch')}" onchange="switchBr(this.value)">${Object.keys(S.branches).sort().map(id=>`<option value="${id}" ${id==S.cur?'selected':''}>${esc(bname(id))}</option>`).join('')}</select>`;
+ nav+=`<select title="${tt('title.period')}" onchange="setPeriod(this.value)">${['month','prev','all'].map(k=>`<option value="${k}" ${period==k?'selected':''}>${tt('period.'+k)}</option>`).join('')}</select>`;
+ document.getElementById('nav').innerHTML=nav;
+ document.getElementById('who').innerHTML=`${langSel()}<span><span class="dot" style="background:${navigator.onLine?'#2ecc71':'#e74c3c'}"></span>${navigator.onLine?tt('on'):tt('off')} · ${esc(me.email)}</span>${deferredInstall?`<button class="b g sm" onclick="installApp()">${tt('install')}</button>`:''}<button class="b s sm" onclick="logout()">${tt('logout')}</button>`;
+ if(!S.cur||!S.branches[S.cur]){app.innerHTML=`<div class="card">${tt('loadingData')}</div>`;return}
+ const v={dash:dashView,sales:salesView,stock:stockView,inv:invView,moves:movesView,set:setView,all:allView,exp:expView,emp:empView}[tab]||dashView;
+ app.innerHTML=v();
+}
+function go(x){tab=x;render()}
+function switchBr(id){S.cur=id;cart=[];cust='';disc=0;editId=null;q='';draft={};fc=[];selP=null;selC='';editEmp=null;payFor=null;render()}
+function setPeriod(p){period=p;subscribeBranches();render()}
+function closeModal(){curInv=null;const m=document.getElementById('modal');m.style.display='none';m.innerHTML=''}
+
+function loginView(){
+ plain();
+ document.getElementById('app').innerHTML=`<div class="card" style="max-width:380px;margin:40px auto"><h3>${tt('login.title')}</h3>
+ <form onsubmit="login();return false">
+ <label>${tt('login.email')}</label><input id="le" type="email" autocomplete="username" required>
+ <label>${tt('login.pass')}</label><input id="lp" type="password" autocomplete="current-password" required>
+ ${loginMsg?`<p class="low">${esc(loginMsg)}</p>`:''}
+ <div class="act"><button class="b g" type="submit">${tt('login.btn')}</button><button type="button" class="b s" onclick="resetPw()">${tt('login.forgot')}</button></div></form>${installHint()}</div>`;
+}
+
+/* =====================  لوحة التحكم  ===================== */
+function stats(bid){
+ const inv=I(bid).filter(i=>!i.cancelled);
+ const total=inv.reduce((a,i)=>a+i.total,0);
+ const profit=inv.reduce((a,i)=>a+i.items.reduce((x,l)=>x+(l.price-l.cost)*l.qty,0)-i.discount,0);
+ const val=P(bid).reduce((a,p)=>a+p.qty*p.cost,0);
+ const low=P(bid).filter(p=>p.qty<=p.min);
+ const exp=E(bid).reduce((a,x)=>a+(+x.amount||0),0);
+ const sal=isAdmin()?PR(bid).reduce((a,x)=>a+(+x.net||0),0):0;
+ return {inv,total,profit,val,low,count:inv.length,exp,sal,net:profit-exp-sal};
+}
+function dashView(){
+ const s=stats(S.cur);
+ return `<div class="grid">
+ <div class="stat">${tt('d.sales',{p:periodLabel()})}<b>${money(s.total)}</b></div>
+ <div class="stat">${tt('d.profit')}<b>${money(s.profit)}</b></div>
+ <div class="stat">${tt('d.exp')}<b>${money(s.exp)}</b></div>
+ ${isAdmin()?`<div class="stat">${tt('d.sal')}<b>${money(s.sal)}</b></div>
+ <div class="stat">${tt('d.net')}<b style="color:${s.net<0?'#c0392b':'#2e8b57'}">${money(s.net)}</b></div>`:''}
+ <div class="stat">${tt('d.stock')}<b>${money(s.val)}</b></div>
+ <div class="stat">${tt('d.count')}<b>${s.count}</b></div></div>
+ <div class="card" style="margin-top:16px"><h3>${tt('d.low')}</h3>
+ ${s.low.length?`<table><tr><th>${tt('th.item')}</th><th>${tt('th.avail')}</th><th>${tt('th.min')}</th></tr>${s.low.map(p=>`<tr><td>${esc(p.name)}</td><td class="low">${num(p.qty)}</td><td>${num(p.min)}</td></tr>`).join('')}</table>`:`<p>${tt('d.noLow')}</p>`}</div>`;
+}
+
+/* =====================  حركات المخزون  ===================== */
+function log(w,bid,type,name,qty,note){
+ w.set(db.collection(`branches/${bid}/moves`).doc(),{date:new Date().toISOString(),type,name,qty,note:note||'',by:me.email,branch:bid});
+}
+function movesView(){
+ const ids=isAdmin()?Object.keys(S.branches).sort():[S.cur];
+ let list=[];
+ ids.forEach(id=>((D[id]&&D[id].moves)||[]).forEach(m=>{if(!isAdmin()||mvf==='all'||mvf===id)list.push({...m,bid:id})}));
+ list.sort((a,b)=>b.date.localeCompare(a.date));list=list.slice(0,200);
+ return `<div class="card"><h3>${tt('m.title',{n:list.length})}</h3>
+ ${isAdmin()?`<div class="row" style="margin-bottom:10px"><div><label>${tt('th.branch')}</label><select onchange="mvf=this.value;render()"><option value="all">${tt('m.all')}</option>${ids.map(id=>`<option value="${id}" ${mvf==id?'selected':''}>${esc(bname(id))}</option>`).join('')}</select></div></div>`:''}
+ <table><tr><th>${tt('th.date')}</th>${isAdmin()?`<th>${tt('th.branch')}</th>`:''}<th>${tt('th.type')}</th><th>${tt('th.item')}</th><th>${tt('th.qty')}</th><th>${tt('th.note')}</th><th>${tt('th.user')}</th></tr>
+ ${list.map(m=>`<tr><td>${fmt(m.date)}</td>${isAdmin()?`<td>${esc(bname(m.bid))}</td>`:''}<td><span class="pill">${esc(mvName(m.type))}</span></td><td>${esc(m.name)}</td><td dir="ltr" style="text-align:right;color:${m.qty<0?'#c0392b':'#2e8b57'}">${m.qty>0?'+':''}${num(m.qty)}</td><td>${esc(m.note)}</td><td>${esc(m.by)}</td></tr>`).join('')||`<tr><td colspan="7">${tt('m.empty')}</td></tr>`}</table></div>`;
+}
+
+/* =====================  المبيعات  ===================== */
+function calc(){
+ const sub=cart.reduce((a,l)=>a+l.qty*l.price,0);
+ const after=Math.max(0,sub-disc);
+ const tax=after*(S.settings.vat||0)/100;
+ return {sub,tax,total:after+tax};
+}
+const lineName=l=>esc(l.name)+(l.color?' — '+esc(l.color):'');
+function salesView(){
+ const prods=P(S.cur);
+ const cur=prods.find(p=>p.id==selP)||prods[0];
+ const cols=(cur&&cur.colors)||[];
+ const opts=prods.map(p=>`<option value="${p.id}" ${cur&&cur.id==p.id?'selected':''}>${p.code?esc(p.code)+' — ':''}${esc(p.name)} — ${tt('s.avail')}: ${num(p.qty)}</option>`).join('');
+ const copts=cols.map(c=>`<option value="${esc(c.n)}" ${c.n===selC?'selected':''}>${esc(c.n)} (${num(c.q)})</option>`).join('');
+ const c=calc();
+ return `<div class="card"><h3>${tt('s.title')} — ${esc(bname(S.cur))}</h3>
+ ${prods.length?`<div class="row">
+  <div><label>${tt('th.item')}</label><select id="sp" onchange="selP=this.value;selC='';render()">${opts}</select></div>
+  ${cols.length?`<div><label>${tt('s.color')}</label><select id="sc" onchange="selC=this.value">${copts}</select></div>`:''}
+  <div><label>${tt('th.qty')}</label><input id="sq" type="number" min="0" step="any" value="1"></div>
+  <div><button class="b" onclick="addLine()">${tt('s.addLine')}</button></div></div>`:`<p>${tt('s.needProducts')}</p>`}
+ </div>
+ <div class="card">
+ <table><tr><th>${tt('th.item')}</th><th>${tt('th.qty')}</th><th>${tt('th.price')}</th><th>${tt('th.sum')}</th><th></th></tr>
+ ${cart.map((l,i)=>`<tr><td>${lineName(l)}${l.code?`<div class="sub">${esc(l.code)}</div>`:''}</td>
+  <td><input type="number" step="any" min="0" value="${l.qty}" style="width:90px" onchange="setLine(${i},'qty',this.value)"></td>
+  <td><input type="number" step="any" min="0" value="${l.price}" style="width:110px" onchange="setLine(${i},'price',this.value)"></td>
+  <td>${money(l.qty*l.price)}</td>
+  <td><button class="b r sm" onclick="cart.splice(${i},1);render()">${tt('s.del')}</button></td></tr>`).join('')||`<tr><td colspan="5">${tt('s.empty')}</td></tr>`}
+ </table>
+ <div class="row" style="margin-top:14px">
+  <div><label>${tt('s.customer')}</label><input id="cu" value="${esc(cust)}" onchange="cust=this.value"></div>
+  <div><label>${tt('s.discount')}</label><input type="number" min="0" step="any" value="${disc}" onchange="disc=+this.value||0;render()"></div></div>
+ <div class="tot"><div><span>${tt('th.sum')}</span><span>${money(c.sub)}</span></div>
+  <div><span>${tt('s.discount')}</span><span>${money(disc)}</span></div>
+  ${S.settings.vat?`<div><span>${tt('s.vat',{v:num(S.settings.vat)})}</span><span>${money(c.tax)}</span></div>`:''}
+  <div class="grand"><span>${tt('s.grand')}</span><span>${money(c.total)}</span></div></div>
+ <div class="act"><button id="fbtn" class="b g" onclick="finish()">${tt('s.save')}</button><button class="b s" onclick="cart=[];cust='';disc=0;render()">${tt('s.clear')}</button></div></div>`;
+}
+function addLine(){
+ const prods=P(S.cur),p=prods.find(x=>x.id==selP)||prods[0];
+ const qty=+document.getElementById('sq').value;
+ if(!p||!(qty>0))return alert(tt('s.badLine'));
+ const cols=p.colors||[];
+ const color=cols.length?(document.getElementById('sc')?document.getElementById('sc').value:cols[0].n):'';
+ const ex=cart.find(l=>l.pid==p.id&&(l.color||'')===color);
+ if(ex)ex.qty+=qty;else cart.push({pid:p.id,name:p.name,code:p.code||'',color,qty,price:p.price,cost:p.cost});
+ render();
+}
+function setLine(i,k,v){cart[i][k]=+v||0;render()}
+async function finish(){
+ const cu=document.getElementById('cu');if(cu)cust=cu.value;
+ if(!cart.length)return alert(tt('s.empty'));
+ const bid=S.cur,items=cart.map(l=>({...l})),c=calc(),dsc=disc,customer=(cust||'').trim();
+ const btn=document.getElementById('fbtn');if(btn)btn.disabled=true;
+ try{
+  const invoice=await db.runTransaction(async tx=>{
+   const bref=db.doc('branches/'+bid);
+   const bd=(await tx.get(bref)).data();
+   const no=bd.counter||1,pre=bd.prefix||'';
+   const groups={};items.forEach(l=>{(groups[l.pid]=groups[l.pid]||[]).push(l)});
+   const snaps=[];
+   for(const pid of Object.keys(groups)){
+    const r=db.doc(`branches/${bid}/products/${pid}`);
+    const s=await tx.get(r);
+    if(!s.exists)throw new Error(tt('s.noItem',{n:groups[pid][0].name}));
+    snaps.push([r,s.data(),groups[pid]]);
+   }
+   const writes=[];
+   for(const [r,p,lines] of snaps){
+    const colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+    let qty=+p.qty||0;
+    for(const l of lines){
+     if(colors.length){
+      const col=colors.find(x=>x.n===(l.color||''));
+      if(!col)throw new Error(tt('s.noColor',{n:l.name,c:l.color||'—'}));
+      if(l.qty>col.q)throw new Error(tt('s.exceed',{n:l.name+(l.color?' — '+l.color:''),q:col.q}));
+      col.q-=l.qty;
+     }else{
+      if(l.qty>qty)throw new Error(tt('s.exceed',{n:l.name,q:qty}));
+      qty-=l.qty;
+     }
+    }
+    writes.push([r,colors.length?{colors,qty:sumColors(colors)}:{qty},lines]);
+   }
+   writes.forEach(([r,upd,lines])=>{
+    tx.update(r,upd);
+    lines.forEach(l=>log(tx,bid,'sale',l.name,-l.qty,(pre+no)+(l.color?' · '+l.color:'')));
+   });
+   tx.update(bref,{counter:no+1});
+   const iref=db.collection(`branches/${bid}/invoices`).doc();
+   const data={no,pre,branch:bd.name,date:new Date().toISOString(),customer,items,discount:dsc,vat:S.settings.vat||0,subtotal:c.sub,tax:c.tax,total:c.total,company:{...S.settings},by:me.email,cancelled:false};
+   tx.set(iref,data);
+   return {id:iref.id,...data};
+  });
+  cart=[];cust='';disc=0;render();showInv(invoice);
+ }catch(e){if(btn)btn.disabled=false;alert(errMsg(e))}
+}
+
+/* =====================  المخزون والألوان  ===================== */
+function colorsLine(p){
+ const cs=p.colors||[];
+ return cs.length?`<div class="sub">${cs.map(c=>`${esc(c.n)}: <span class="${(+c.q)<=0?'low':''}">${num(c.q)}</span>`).join(' · ')}</div>`:'';
+}
+function plistHTML(){
+ const k=q.toLowerCase();
+ const list=P(S.cur).filter(p=>(p.name+' '+(p.code||'')+' '+(p.colors||[]).map(c=>c.n).join(' ')).toLowerCase().includes(k));
+ return `<table><tr><th>${tt('th.item')}</th><th>${tt('th.code')}</th><th>${tt('th.cost')}</th><th>${tt('th.sell')}</th><th>${tt('th.avail')}</th><th></th></tr>
+ ${list.map(p=>`<tr><td>${esc(p.name)}</td><td>${esc(p.code)}</td><td>${money(p.cost)}</td><td>${money(p.price)}</td>
+  <td><span class="${p.qty<=p.min?'low':''}">${num(p.qty)}</span>${colorsLine(p)}</td>
+  <td><button class="b sm" onclick="openAdd('${p.id}')">${tt('st.addQty')}</button>
+  <button class="b s sm" onclick="startEdit('${p.id}')">${tt('btn.edit')}</button>
+  <button class="b r sm" onclick="delProd('${p.id}')">${tt('btn.delete')}</button></td></tr>`).join('')||`<tr><td colspan="6">${tt('st.empty')}</td></tr>`}</table>`;
+}
+function stockView(){
+ const dv=(k,def)=>esc(draft[k]??def??'');
+ const total=sumColors(fc);
+ return `<div class="card"><h3>${editId?tt('st.edit'):tt('st.add')} — ${esc(bname(S.cur))}</h3>
+ <div class="row">
+  <div><label>${tt('f.name')}</label><input value="${dv('name')}" oninput="draft.name=this.value"></div>
+  <div><label>${tt('f.code')}</label><input value="${dv('code')}" oninput="draft.code=this.value"></div>
+  <div><label>${tt('f.cost')}</label><input type="number" step="any" value="${dv('cost')}" oninput="draft.cost=this.value"></div>
+  <div><label>${tt('f.price')}</label><input type="number" step="any" value="${dv('price')}" oninput="draft.price=this.value"></div>
+  <div><label>${tt('f.qty')}</label>${fc.length?`<input value="${num(total)}" disabled title="${tt('f.qtyAuto')}">`:`<input type="number" step="any" value="${dv('qty')}" oninput="draft.qty=this.value">`}</div>
+  <div><label>${tt('f.min')}</label><input type="number" step="any" value="${dv('min',5)}" oninput="draft.min=this.value"></div></div>
+ <label style="margin-top:14px">${tt('f.colors')}</label>
+ ${fc.map((c,i)=>`<div class="crow"><input placeholder="${tt('f.colorName')}" value="${esc(c.n)}" oninput="fc[${i}].n=this.value"><input type="number" min="0" step="any" placeholder="${tt('th.qty')}" value="${esc(c.q)}" oninput="fc[${i}].q=this.value;fcTotal()"><button class="b r sm" onclick="fc.splice(${i},1);render()">×</button></div>`).join('')}
+ ${fc.length?`<div class="sub" id="fctot">${tt('f.qtyAuto')}: <b>${num(total)}</b></div>`:''}
+ <div class="act"><button class="b s sm" onclick="fc.push({n:'',q:''});render()">${tt('f.addColor')}</button></div>
+ <div class="act"><button class="b g" onclick="saveProd()">${editId?tt('btn.saveEdit'):tt('btn.add')}</button>
+ ${editId?`<button class="b s" onclick="cancelEdit()">${tt('btn.cancel')}</button>`:''}</div></div>
+ <div class="card"><div class="row" style="margin-bottom:10px"><div><input placeholder="${tt('st.search')}" value="${esc(q)}" oninput="q=this.value;document.getElementById('plist').innerHTML=plistHTML()"></div></div>
+ <div id="plist">${plistHTML()}</div></div>`;
+}
+function fcTotal(){const el=document.getElementById('fctot');if(el)el.innerHTML=tt('f.qtyAuto')+': <b>'+num(sumColors(fc))+'</b>'}
+function startEdit(id){
+ const e=P(S.cur).find(p=>p.id==id);if(!e)return;
+ editId=id;draft={name:e.name,code:e.code||'',cost:e.cost,price:e.price,qty:e.qty,min:e.min};
+ fc=(e.colors||[]).map(c=>({n:c.n,q:c.q}));
+ render();window.scrollTo&&window.scrollTo(0,0);
+}
+function cancelEdit(){editId=null;draft={};fc=[];render()}
+function saveProd(){
+ const name=(draft.name||'').trim();if(!name)return alert(tt('f.needName'));
+ const rows=fc.map(c=>({n:String(c.n||'').trim(),q:(c.q===''||c.q==null)?0:+c.q})).filter(c=>c.n||c.q);
+ const seen=new Set();
+ for(const c of rows){
+  if(!c.n)return alert(tt('f.colorNeedName'));
+  if(!(c.q>=0))return alert(tt('f.badQty'));
+  const k=c.n.toLowerCase();if(seen.has(k))return alert(tt('f.colorDup',{c:c.n}));seen.add(k);
+ }
+ const d={name,code:(draft.code||'').trim(),cost:+draft.cost||0,price:+draft.price||0,min:(draft.min===undefined||draft.min==='')?5:(+draft.min||0)};
+ if(rows.length){d.colors=rows;d.qty=sumColors(rows)}else{d.colors=[];d.qty=+draft.qty||0}
+ const bid=S.cur,col=db.collection(`branches/${bid}/products`),b=db.batch();
+ if(editId){
+  const old=P(bid).find(p=>p.id==editId)||{qty:0};
+  b.update(col.doc(editId),d);log(b,bid,'edit',d.name,d.qty-(old.qty||0),'');
+ }else{
+  b.set(col.doc(),d);log(b,bid,'new',d.name,d.qty,'');
+ }
+ editId=null;draft={};fc=[];render();fire(b.commit());
+}
+function openAdd(id){
+ const p=P(S.cur).find(x=>x.id==id);if(!p)return;
+ const cs=p.colors||[];
+ const m=document.getElementById('modal');curInv=null;
+ m.innerHTML=`<div class="box small"><h3>${tt('add.title',{n:esc(p.name)})}</h3>
+ ${cs.length?`<label>${tt('s.color')}</label><select id="ac" onchange="document.getElementById('acn').style.display=this.value==='__new'?'block':'none'">${cs.map(c=>`<option value="${esc(c.n)}">${esc(c.n)} (${num(c.q)})</option>`).join('')}<option value="__new">${tt('add.newColor')}</option></select>
+ <input id="acn" placeholder="${tt('add.newColorName')}" style="display:none;margin-top:6px">`:''}
+ <label>${tt('th.qty')}</label><input id="aq" type="number" min="0" step="any">
+ <div class="act"><button class="b g" onclick="doAdd('${id}')">${tt('btn.confirm')}</button><button class="b s" onclick="closeModal()">${tt('btn.cancel')}</button></div></div>`;
+ m.style.display='block';
+}
+async function doAdd(id){
+ const p=P(S.cur).find(x=>x.id==id);if(!p)return;
+ const n=parseFloat(document.getElementById('aq').value);
+ if(!(n>0))return alert(tt('add.bad'));
+ const bid=S.cur,hasC=(p.colors||[]).length>0;
+ try{
+  if(!hasC){
+   const b=db.batch();
+   b.update(db.doc(`branches/${bid}/products/${id}`),{qty:firebase.firestore.FieldValue.increment(n)});
+   log(b,bid,'add',p.name,n,'');
+   await b.commit();
+  }else{
+   const sel=document.getElementById('ac').value;
+   const cname=sel==='__new'?document.getElementById('acn').value.trim():sel;
+   if(!cname)return alert(tt('f.colorNeedName'));
+   await db.runTransaction(async tx=>{
+    const r=db.doc(`branches/${bid}/products/${id}`);
+    const s=await tx.get(r);if(!s.exists)throw new Error(tt('s.noItem',{n:p.name}));
+    const colors=(s.data().colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+    const ex=colors.find(x=>x.n.toLowerCase()===cname.toLowerCase());
+    if(ex)ex.q+=n;else colors.push({n:cname,q:n});
+    tx.update(r,{colors,qty:sumColors(colors)});
+    log(tx,bid,'add',p.name,n,cname);
+   });
+  }
+  closeModal();
+ }catch(e){alert(errMsg(e))}
+}
+function delProd(id){
+ const p=P(S.cur).find(x=>x.id==id);if(!p)return;
+ if(!confirm(tt('st.delConfirm',{n:p.name})))return;
+ const b=db.batch();
+ b.delete(db.doc(`branches/${S.cur}/products/${id}`));
+ log(b,S.cur,'del',p.name,-p.qty,'');
+ fire(b.commit());
+}
+
+/* =====================  الفواتير والطباعة  ===================== */
+function invView(){
+ return `<div class="card"><h3>${tt('i.title')} — ${esc(bname(S.cur))} (${periodLabel()})</h3><table><tr><th>${tt('th.no')}</th><th>${tt('th.date')}</th><th>${tt('th.customer')}</th><th>${tt('th.total')}</th><th>${tt('th.by')}</th><th></th></tr>
+ ${I(S.cur).map(i=>`<tr class="${i.cancelled?'cx':''}"><td>${esc(i.pre||'')}${i.no}</td><td>${fmt(i.date)}</td><td>${esc(i.customer||tt('inv.cash'))}</td><td>${money(i.total)}</td><td>${esc(i.by)}</td>
+ <td><button class="b sm" onclick="showInvId('${S.cur}','${i.id}')">${tt('i.view')}</button>
+ ${isAdmin()&&!i.cancelled?`<button class="b r sm" onclick="cancelInv('${S.cur}','${i.id}')">${tt('i.cancel')}</button>`:''}</td></tr>`).join('')||`<tr><td colspan="6">${tt('i.empty')}</td></tr>`}</table></div>`;
+}
+function showInvId(bid,id){const i=I(bid).find(x=>x.id==id);if(i)showInv(i)}
+function invHTML(i,paper){
+ const c=i.company||S.settings,cur=esc(c.currency),no=esc(i.pre||'')+i.no;
+ const cust=esc(i.customer||tt('inv.cash')),lines=i.items||[];
+ const stamp=i.cancelled?`<div class="stamp">${tt('inv.cancelled')}</div>`:'';
+ const act=`<div class="act"><select title="${tt('inv.paper')}" onchange="setPaper(this.value)">${[['80','inv.r80'],['58','inv.r58'],['a4','inv.a4']].map(([k,l])=>`<option value="${k}" ${k==paper?'selected':''}>${tt(l)}</option>`).join('')}</select><button class="b" onclick="printInv()">${tt('inv.print')}</button><button class="b s" onclick="closeModal()">${tt('btn.close')}</button></div>`;
+ if(paper==='a4'){
+  return `<div class="box">${stamp}<div class="inv-head"><div><h2>${esc(c.name)}</h2>
+  <div>${i.branch?'<b>'+esc(i.branch)+'</b> — ':''}${esc(c.address)}</div><div>${c.phone?tt('inv.phone',{p:ltr(c.phone)}):''}</div><div>${c.tax?tt('inv.tax',{t:ltr(c.tax)}):''}</div></div>
+  <div class="inv-meta"><h2>${tt('inv.title')}</h2><div>${tt('inv.no',{n:no})}</div><div>${tt('inv.date',{d:dshort(i.date)})}</div></div></div>
+  <p><b>${tt('inv.customer')}:</b> ${cust}</p>
+  <table><tr><th>#</th><th>${tt('th.code')}</th><th>${tt('th.item')}</th><th>${tt('th.qty')}</th><th>${tt('th.price')}</th><th>${tt('th.sum')}</th></tr>
+  ${lines.map((l,n)=>`<tr><td>${n+1}</td><td>${esc(l.code)}</td><td>${lineName(l)}</td><td>${num(l.qty)}</td><td>${num(l.price)}</td><td>${num(l.qty*l.price)}</td></tr>`).join('')}</table>
+  <div class="tot"><div><span>${tt('th.sum')}</span><span>${num(i.subtotal)} ${cur}</span></div>
+  ${i.discount?`<div><span>${tt('s.discount')}</span><span>${num(i.discount)} ${cur}</span></div>`:''}
+  ${i.vat?`<div><span>${tt('s.vat',{v:num(i.vat)})}</span><span>${num(i.tax)} ${cur}</span></div>`:''}
+  <div class="grand"><span>${tt('s.grand')}</span><span>${num(i.total)} ${cur}</span></div></div>
+  <p class="thanks">${tt('inv.thanks')}</p>${act}</div>`;
+ }
+ return `<div class="box rcpt"><div class="rc ${paper==='58'?'w58':''}">${stamp}
+ <div class="c big">${esc(c.name)}</div>
+ ${i.branch?`<div class="c xs">${esc(i.branch)}</div>`:''}
+ ${c.address?`<div class="c xs">${esc(c.address)}</div>`:''}
+ ${c.phone?`<div class="c xs">${tt('inv.phone',{p:ltr(c.phone)})}</div>`:''}
+ ${c.tax?`<div class="c xs">${tt('inv.tax',{t:ltr(c.tax)})}</div>`:''}
+ <hr>
+ <div class="kv"><span>${tt('inv.title')}</span><b>${no}</b></div>
+ <div class="kv"><span>${tt('th.date')}</span><span>${fmt(i.date)}</span></div>
+ <div class="kv"><span>${tt('inv.customer')}</span><span>${cust}</span></div>
+ <hr>
+ ${lines.map(l=>`<div class="it"><div class="nm">${esc(l.name)}</div>
+ ${(l.code||l.color)?`<div class="mt">${[l.code?esc(l.code):'',l.color?esc(l.color):''].filter(Boolean).join(' · ')}</div>`:''}
+ <div class="ln"><span>${num(l.qty)} × ${num(l.price)}</span><b>${num(l.qty*l.price)}</b></div></div>`).join('')}
+ <hr>
+ <div class="kv"><span>${tt('th.sum')}</span><span>${num(i.subtotal)} ${cur}</span></div>
+ ${i.discount?`<div class="kv"><span>${tt('s.discount')}</span><span>${num(i.discount)} ${cur}</span></div>`:''}
+ ${i.vat?`<div class="kv"><span>${tt('s.vat',{v:num(i.vat)})}</span><span>${num(i.tax)} ${cur}</span></div>`:''}
+ <div class="kv gt"><span>${tt('s.grand')}</span><span>${num(i.total)} ${cur}</span></div>
+ <hr>
+ <div class="c xs">${tt('inv.thanks')}</div></div>${act}</div>`;
+}
+function showInv(i){
+ curInv=i;
+ const m=document.getElementById('modal');
+ m.innerHTML=invHTML(i,getPaper());
+ m.style.display='block';
+}
+function printInv(){
+ const paper=getPaper(),rc=document.querySelector('#modal .rc');
+ let css='@page{size:A4;margin:12mm}';
+ if(paper!=='a4'){
+  const h=rc?Math.ceil(rc.offsetHeight*25.4/96)+6:200;
+  css=`@page{size:${paper==='58'?58:80}mm ${h}mm;margin:0}`;
+ }
+ let st=document.getElementById('pgs');
+ if(!st){st=document.createElement('style');st.id='pgs';document.head.appendChild(st)}
+ st.textContent=css;
+ setTimeout(()=>window.print(),60);
+}
+async function cancelInv(bid,id){
+ if(!confirm(tt('i.cancelConfirm')))return;
+ try{
+  await db.runTransaction(async tx=>{
+   const iref=db.doc(`branches/${bid}/invoices/${id}`);
+   const is=await tx.get(iref);
+   if(!is.exists)throw new Error(tt('i.notFound'));
+   const invoice=is.data();
+   if(invoice.cancelled)throw new Error(tt('i.already'));
+   const groups={};(invoice.items||[]).forEach(l=>{(groups[l.pid]=groups[l.pid]||[]).push(l)});
+   const snaps=[];
+   for(const pid of Object.keys(groups)){const r=db.doc(`branches/${bid}/products/${pid}`);snaps.push([r,await tx.get(r),groups[pid]])}
+   const ref=(invoice.pre||'')+invoice.no;
+   snaps.forEach(([r,s,lines])=>{
+    if(s.exists){
+     const p=s.data(),colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+     let qty=+p.qty||0;
+     lines.forEach(l=>{
+      if(colors.length){
+       const nm=l.color||'—',ex=colors.find(x=>x.n===nm);
+       if(ex)ex.q+=l.qty;else colors.push({n:nm,q:l.qty});
+      }else qty+=l.qty;
+     });
+     tx.update(r,colors.length?{colors,qty:sumColors(colors)}:{qty});
+    }
+    lines.forEach(l=>log(tx,bid,'cancel',l.name,l.qty,ref+(l.color?' · '+l.color:'')));
+   });
+   tx.update(iref,{cancelled:true,cancelledBy:me.email,cancelledAt:new Date().toISOString()});
+  });
+ }catch(e){alert(errMsg(e))}
+}
+
+/* =====================  المصاريف  ===================== */
+function expView(){
+ const list=E(S.cur).slice().sort((a,b)=>b.date.localeCompare(a.date));
+ const tot=list.reduce((a,x)=>a+(+x.amount||0),0);
+ const by={};list.forEach(x=>by[x.category]=(by[x.category]||0)+(+x.amount||0));
+ return `<div class="card"><h3>${tt('x.add')} — ${esc(bname(S.cur))}</h3><div class="row">
+  <div><label>${tt('x.date')}</label><input id="xd" type="date" value="${todayStr()}"></div>
+  <div><label>${tt('x.cat')}</label><select id="xc">${CATS.map(c=>`<option value="${c}">${tt('cat.'+c)}</option>`).join('')}</select></div>
+  <div><label>${tt('x.amount')}</label><input id="xa" type="number" min="0" step="any"></div>
+  <div><label>${tt('x.note')}</label><input id="xn"></div>
+  <div><button class="b g" onclick="addExp()">${tt('btn.add')}</button></div></div></div>
+ <div class="card"><h3>${tt('x.list',{p:periodLabel(),t:money(tot)})}</h3>
+ ${Object.keys(by).length?'<p>'+Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([k,v])=>`<span class="pill">${esc(catName(k))}: ${money(v)}</span>`).join(' ')+'</p>':''}
+ <table><tr><th>${tt('x.date')}</th><th>${tt('x.cat')}</th><th>${tt('x.amount')}</th><th>${tt('x.note')}</th><th>${tt('th.by')}</th>${isAdmin()?'<th></th>':''}</tr>
+ ${list.map(x=>`<tr><td>${dshort(x.date)}</td><td>${esc(catName(x.category))}</td><td>${money(x.amount)}</td><td>${esc(x.note)}</td><td>${esc(x.by)}</td>${isAdmin()?`<td><button class="b r sm" onclick="delExp('${x.id}')">${tt('btn.delete')}</button></td>`:''}</tr>`).join('')||`<tr><td colspan="6">${tt('x.empty')}</td></tr>`}</table></div>`;
+}
+function addExp(){
+ const g=id=>document.getElementById(id).value;
+ const amt=+g('xa');if(!(amt>0))return alert(tt('x.badAmount'));
+ const ds=g('xd');if(!ds)return alert(tt('x.pickDate'));
+ const [y,m,d]=ds.split('-').map(Number);
+ const date=new Date(y,m-1,d,12).toISOString(),bid=S.cur,[from,to]=range();
+ fire(db.collection(`branches/${bid}/expenses`).add({date,category:g('xc'),amount:amt,note:g('xn').trim(),by:me.email,branch:bid}));
+ document.getElementById('xa').value='';document.getElementById('xn').value='';
+ if((from&&date<from)||(to&&date>=to))alert(tt('x.outPeriod'));
+}
+function delExp(id){
+ const x=E(S.cur).find(e=>e.id==id);if(!x)return;
+ if(confirm(tt('x.delConfirm',{c:catName(x.category),a:num(x.amount)})))fire(db.doc(`branches/${S.cur}/expenses/${id}`).delete());
+}
+
+/* =====================  الموظفون والرواتب (للإدارة فقط)  ===================== */
+function empView(){
+ if(!isAdmin())return '';
+ const bid=S.cur,list=EM(bid).slice().sort(byName),act=list.filter(e=>e.active!==false);
+ const e=list.find(x=>x.id==editEmp)||{};
+ const n=new Date(),mk=period==='prev'?ymOf(new Date(n.getFullYear(),n.getMonth()-1,1)):ymOf(n);
+ const paid=id=>PR(bid).filter(p=>p.empId===id&&p.month===mk).reduce((a,p)=>a+(+p.net||0),0);
+ const pay=payFor&&act.find(x=>x.id==payFor)||act[0]||{};
+ const hist=PR(bid).slice().sort((a,b)=>b.month.localeCompare(a.month)||b.date.localeCompare(a.date));
+ const ht=hist.reduce((a,p)=>a+(+p.net||0),0);
+ return `<div class="card"><h3>${editEmp?tt('e.edit'):tt('e.add')} — ${esc(bname(bid))}</h3><div class="row">
+  <div><label>${tt('e.name')}</label><input id="en" value="${esc(e.name)}"></div>
+  <div><label>${tt('e.pos')}</label><input id="ep" value="${esc(e.position)}"></div>
+  <div><label>${tt('e.phone')}</label><input id="eph" value="${esc(e.phone)}"></div>
+  <div><label>${tt('e.salary')}</label><input id="es" type="number" min="0" step="any" value="${e.salary??''}"></div>
+  <div><button class="b g" onclick="saveEmp()">${editEmp?tt('btn.saveEdit'):tt('btn.add')}</button>${editEmp?` <button class="b s" onclick="editEmp=null;render()">${tt('btn.cancel')}</button>`:''}</div></div></div>
+ <div class="card"><h3>${tt('e.list',{b:esc(bname(bid))})}</h3><table><tr><th>${tt('e.name')}</th><th>${tt('e.pos')}</th><th>${tt('e.salary')}</th><th>${tt('th.paidFor',{m:mk})}</th><th>${tt('th.remain')}</th><th>${tt('th.status')}</th><th></th></tr>
+ ${list.map(x=>{const p=paid(x.id),on=x.active!==false;return `<tr style="${on?'':'opacity:.55'}"><td>${esc(x.name)}</td><td>${esc(x.position)}</td><td>${money(x.salary)}</td><td>${money(p)}</td><td class="${on&&p<x.salary?'low':''}">${money(Math.max(0,(+x.salary||0)-p))}</td><td>${on?tt('e.on'):tt('e.off')}</td>
+ <td>${on?`<button class="b sm" onclick="payFor='${x.id}';render()">${tt('e.pay')}</button> `:''}<button class="b s sm" onclick="editEmp='${x.id}';render()">${tt('btn.edit')}</button>
+ <button class="b s sm" onclick="toggleEmp('${x.id}')">${on?tt('e.stop'):tt('e.start')}</button> <button class="b r sm" onclick="delEmp('${x.id}')">${tt('btn.delete')}</button></td></tr>`}).join('')||`<tr><td colspan="7">${tt('e.empty')}</td></tr>`}</table>
+ <p style="font-size:12px;color:#566">${tt('e.hint')}</p></div>
+ ${act.length?`<div class="card"><h3>${tt('p.title')}</h3><div class="row">
+  <div><label>${tt('p.emp')}</label><select id="pe" onchange="fillBase()">${act.map(x=>`<option value="${x.id}" ${x.id==pay.id?'selected':''}>${esc(x.name)}</option>`).join('')}</select></div>
+  <div><label>${tt('p.month')}</label><input id="pmn" type="month" value="${mk}"></div>
+  <div><label>${tt('p.base')}</label><input id="pb" type="number" step="any" value="${pay.salary??''}"></div>
+  <div><label>${tt('p.bonus')}</label><input id="pbo" type="number" step="any" value="0"></div>
+  <div><label>${tt('p.ded')}</label><input id="pd" type="number" step="any" value="0"></div>
+  <div><label>${tt('p.note')}</label><input id="pno"></div>
+  <div><button class="b g" onclick="payEmp()">${tt('p.btn')}</button></div></div></div>`:''}
+ <div class="card"><h3>${tt('p.hist',{p:periodLabel(),t:money(ht)})}</h3><table><tr><th>${tt('th.month')}</th><th>${tt('th.employee')}</th><th>${tt('th.base')}</th><th>${tt('th.bonus')}</th><th>${tt('th.ded')}</th><th>${tt('th.net')}</th><th>${tt('th.paidOn')}</th><th>${tt('p.note')}</th><th></th></tr>
+ ${hist.map(p=>`<tr><td>${esc(p.month)}</td><td>${esc(p.name)}</td><td>${num(p.base)}</td><td>${num(p.bonus)}</td><td>${num(p.deduction)}</td><td><b>${money(p.net)}</b></td><td>${dshort(p.date)}</td><td>${esc(p.note)}</td><td><button class="b r sm" onclick="delPay('${p.id}')">${tt('btn.delete')}</button></td></tr>`).join('')||`<tr><td colspan="9">${tt('p.empty')}</td></tr>`}</table></div>`;
+}
+function fillBase(){
+ const e=EM(S.cur).find(x=>x.id==document.getElementById('pe').value);
+ document.getElementById('pb').value=e&&e.salary!=null?e.salary:'';
+}
+function saveEmp(){
+ const g=id=>document.getElementById(id).value;
+ const name=g('en').trim();if(!name)return alert(tt('e.needName'));
+ const d={name,position:g('ep').trim(),phone:g('eph').trim(),salary:+g('es')||0};
+ const col=db.collection(`branches/${S.cur}/employees`);
+ fire(editEmp?col.doc(editEmp).update(d):col.add({...d,active:true}));
+ editEmp=null;render();
+}
+function toggleEmp(id){
+ const e=EM(S.cur).find(x=>x.id==id);if(!e)return;
+ fire(db.doc(`branches/${S.cur}/employees/${id}`).update({active:e.active===false}));
+}
+function delEmp(id){
+ const e=EM(S.cur).find(x=>x.id==id);if(!e)return;
+ if(confirm(tt('e.delConfirm',{n:e.name})))fire(db.doc(`branches/${S.cur}/employees/${id}`).delete());
+}
+function payEmp(){
+ const g=id=>document.getElementById(id).value;
+ const bid=S.cur,e=EM(bid).find(x=>x.id==g('pe'));
+ if(!e)return alert(tt('p.pickEmp'));
+ const month=g('pmn');if(!month)return alert(tt('p.pickMonth'));
+ const base=+g('pb')||0,bonus=+g('pbo')||0,ded=+g('pd')||0,net=base+bonus-ded;
+ if(!(net>0))return alert(tt('p.badNet'));
+ const prev=PR(bid).filter(p=>p.empId===e.id&&p.month===month).reduce((a,p)=>a+(+p.net||0),0);
+ if(!confirm(tt('p.confirm',{a:num(net),c:S.settings.currency,n:e.name,m:month})+(prev?'\n'+tt('p.dup',{a:num(prev)}):'')))return;
+ const [fm,tm]=mrange();
+ fire(db.collection(`branches/${bid}/payroll`).add({date:new Date().toISOString(),month,empId:e.id,name:e.name,base,bonus,deduction:ded,net,note:g('pno').trim(),by:me.email,branch:bid}));
+ payFor=null;
+ if(fm&&(month<fm||month>=tm))alert(tt('p.outPeriod'));
+}
+function delPay(id){
+ const p=PR(S.cur).find(x=>x.id==id);if(!p)return;
+ if(confirm(tt('p.delConfirm',{n:p.name,m:p.month,a:num(p.net)})))fire(db.doc(`branches/${S.cur}/payroll/${id}`).delete());
+}
+
+/* =====================  كل الفروع  ===================== */
+function allView(){
+ const ids=Object.keys(S.branches).sort();
+ let tot=0,pr=0,val=0,cnt=0,lw=0,te=0,ts=0,tn=0;
+ const rows=ids.map(id=>{
+  const s=stats(id);tot+=s.total;pr+=s.profit;val+=s.val;cnt+=s.count;lw+=s.low.length;te+=s.exp;ts+=s.sal;tn+=s.net;
+  return `<tr><td>${esc(bname(id))}</td><td>${s.count}</td><td>${money(s.total)}</td><td>${money(s.profit)}</td><td>${money(s.exp)}</td><td>${money(s.sal)}</td><td style="color:${s.net<0?'#c0392b':'#2e8b57'}"><b>${money(s.net)}</b></td><td>${money(s.val)}</td><td class="${s.low.length?'low':''}">${s.low.length}</td></tr>`}).join('');
+ const cm={};ids.forEach(id=>E(id).forEach(x=>{(cm[x.category]=cm[x.category]||{})[id]=(cm[x.category][id]||0)+(+x.amount||0)}));
+ const map={};
+ ids.forEach(id=>P(id).forEach(p=>{const k=p.name.trim().toLowerCase();(map[k]=map[k]||{name:p.name,q:{}}).q[id]=p}));
+ const items=Object.values(map).sort(byName);
+ return `<div class="card"><h3>${tt('a.title',{p:periodLabel()})}</h3><table><tr><th>${tt('th.branch')}</th><th>${tt('th.invoices')}</th><th>${tt('th.sales')}</th><th>${tt('th.profit')}</th><th>${tt('th.exp')}</th><th>${tt('th.sal')}</th><th>${tt('th.netProfit')}</th><th>${tt('th.stockVal')}</th><th>${tt('th.lowCount')}</th></tr>${rows}
+ <tr><th>${tt('th.total')}</th><th>${cnt}</th><th>${money(tot)}</th><th>${money(pr)}</th><th>${money(te)}</th><th>${money(ts)}</th><th style="color:${tn<0?'#c0392b':'#2e8b57'}">${money(tn)}</th><th>${money(val)}</th><th>${lw}</th></tr></table></div>
+ <div class="card"><h3>${tt('a.cats',{p:periodLabel()})}</h3><table><tr><th>${tt('x.cat')}</th>${ids.map(id=>`<th>${esc(bname(id))}</th>`).join('')}<th>${tt('th.sum')}</th></tr>
+ ${Object.keys(cm).sort().map(c=>`<tr><td>${esc(catName(c))}</td>${ids.map(id=>`<td>${cm[c][id]?money(cm[c][id]):'—'}</td>`).join('')}<td><b>${money(ids.reduce((a,id)=>a+(cm[c][id]||0),0))}</b></td></tr>`).join('')||`<tr><td colspan="${ids.length+2}">${tt('a.noExp')}</td></tr>`}</table></div>
+ <div class="card"><h3>${tt('a.stock')}</h3><table><tr><th>${tt('th.item')}</th>${ids.map(id=>`<th>${esc(bname(id))}</th>`).join('')}<th>${tt('th.sum')}</th></tr>
+ ${items.map(it=>`<tr><td>${esc(it.name)}</td>${ids.map(id=>{const p=it.q[id];return p?`<td class="${p.qty<=p.min?'low':''}">${num(p.qty)}</td>`:'<td>—</td>'}).join('')}<td><b>${num(ids.reduce((a,id)=>a+(it.q[id]?it.q[id].qty:0),0))}</b></td></tr>`).join('')||`<tr><td colspan="${ids.length+2}">${tt('a.noItems')}</td></tr>`}</table></div>`;
+}
+
+/* =====================  الإعدادات / الحساب  ===================== */
+function setView(){
+ const acct=`<div class="card"><h3>${tt('acct.title')}</h3><p>${esc(me.email)} ${isAdmin()?`<span class="pill">${tt('acct.admin')}</span>`:`<span class="pill">${esc(bname(me.branch))}</span>`}</p>
+ <div class="act"><button class="b s" onclick="resetPw()">${tt('acct.reset')}</button><button class="b r" onclick="logout()">${tt('acct.logout')}</button></div></div>`;
+ if(!isAdmin())return acct;
+ const s=S.settings,ids=Object.keys(S.branches).sort();
+ return `<div class="card"><h3>${tt('set.company')}</h3><div class="row">
+ <div><label>${tt('set.cname')}</label><input id="sn" value="${esc(s.name)}"></div>
+ <div><label>${tt('set.addr')}</label><input id="sa" value="${esc(s.address)}"></div>
+ <div><label>${tt('set.phone')}</label><input id="sph" value="${esc(s.phone)}"></div>
+ <div><label>${tt('set.taxno')}</label><input id="st" value="${esc(s.tax)}"></div>
+ <div><label>${tt('set.cur')}</label><input id="sc" value="${esc(s.currency)}"></div>
+ <div><label>${tt('set.vatp')}</label><input id="sv" type="number" step="any" value="${s.vat}"></div>
+ <div><button class="b g" onclick="saveSet()">${tt('btn.save')}</button></div></div></div>
+ <div class="card"><h3>${tt('set.branches')}</h3><div class="row">
+ ${ids.map(id=>`<div><label>${tt('set.bname',{id})}</label><input id="bn_${id}" value="${esc(S.branches[id].name)}"></div><div><label>${tt('set.bprefix')}</label><input id="bp_${id}" value="${esc(S.branches[id].prefix)}" maxlength="4"></div>`).join('')}
+ <div><button class="b g" onclick="saveBr()">${tt('set.saveBr')}</button></div></div></div>
+ <div class="card"><h3>${tt('set.users')}</h3>
+ <p style="font-size:13px;color:#566">${tt('set.usersHint')}</p>
+ <table><tr><th>${tt('th.email')}</th><th>${tt('th.branch')}</th><th></th></tr>
+ ${U.map(u=>`<tr><td>${esc(u.email)}</td><td>${esc(bname(u.branch))}</td><td><button class="b r sm" onclick="rmUser('${esc(u.email)}')">${tt('set.revoke')}</button></td></tr>`).join('')||`<tr><td colspan="3">${tt('set.noUsers')}</td></tr>`}</table>
+ <div class="row" style="margin-top:12px">
+  <div><label>${tt('set.uemail')}</label><input id="ue" type="email"></div>
+  <div><label>${tt('set.upass')}</label><input id="up" type="text"></div>
+  <div><label>${tt('th.branch')}</label><select id="ub">${ids.map(id=>`<option value="${id}">${esc(bname(id))}</option>`).join('')}</select></div>
+  <div><button class="b g" onclick="addUser()">${tt('set.uadd')}</button></div></div></div>
+ <div class="card"><h3>${tt('set.backup')}</h3>
+ <div class="act"><button class="b" onclick="backup()">${tt('set.dl')}</button>
+ <button class="b s" onclick="document.getElementById('lf').click()">${tt('set.import')}</button>
+ <input type="file" id="lf" accept=".json" hidden onchange="legacyImport(this.files[0]);this.value=''"></div></div>
+ ${acct}`;
+}
+function saveSet(){
+ const g=id=>document.getElementById(id).value;
+ const d={name:g('sn').trim()||'MK Kids',address:g('sa'),phone:g('sph'),tax:g('st'),currency:g('sc')||'$',vat:+g('sv')||0};
+ fire(db.doc('settings/company').set(d).then(()=>alert(tt('set.saved'))));
+}
+function saveBr(){
+ const b=db.batch();
+ Object.keys(S.branches).forEach(id=>b.update(db.doc('branches/'+id),{name:document.getElementById('bn_'+id).value.trim()||id,prefix:document.getElementById('bp_'+id).value.trim()}));
+ fire(b.commit().then(()=>alert(tt('set.saved'))));
+}
+async function addUser(){
+ const e=document.getElementById('ue').value.trim().toLowerCase(),p=document.getElementById('up').value,br=document.getElementById('ub').value;
+ if(!e||!p)return alert(tt('set.needEmailPass'));
+ if(e===ADMIN_EMAIL.toLowerCase())return alert(tt('set.isAdminMail'));
+ try{
+  const sec=firebase.apps.find(a=>a.name==='sec')||firebase.initializeApp(FB_CONFIG,'sec');
+  try{await sec.auth().createUserWithEmailAndPassword(e,p);await sec.auth().signOut()}
+  catch(x){if(x.code!=='auth/email-already-in-use')throw x}
+  await db.doc('users/'+e).set({email:e,branch:br});
+  document.getElementById('ue').value='';document.getElementById('up').value='';
+  alert(tt('set.userAdded'));
+ }catch(x){alert(authErr(x))}
+}
+function rmUser(e){if(confirm(tt('set.revokeConfirm',{e})))fire(db.doc('users/'+e).delete())}
+function backup(){
+ const a=document.createElement('a');
+ a.href=URL.createObjectURL(new Blob([JSON.stringify({settings:S.settings,branches:S.branches,data:D})],{type:'application/json'}));
+ a.download='backup-online-'+new Date().toISOString().slice(0,10)+'.json';a.click();
+}
+async function legacyImport(f){
+ if(!f)return;
+ let d;try{d=JSON.parse(await f.text())}catch(e){return alert(tt('set.badFile'))}
+ const ids=Object.keys(S.branches).sort(),sets=[];
+ if(Array.isArray(d.branches))d.branches.forEach((b,i)=>{if(ids[i]&&b&&b.products)sets.push([ids[i],b])});
+ else if(d.products)sets.push([S.cur,d]);
+ if(!sets.length)return alert(tt('set.badFile'));
+ const sum=sets.map(([id,b])=>tt('set.impLine',{b:bname(id),p:(b.products||[]).length,i:(b.invoices||[]).length})).join('\n');
+ if(!confirm(tt('set.importConfirm',{s:sum})))return;
+ const ops=[];
+ for(const [id,b] of sets){
+  (b.products||[]).forEach(p=>ops.push(w=>w.set(db.doc(`branches/${id}/products/${p.id}`),{name:p.name,code:p.code||'',cost:+p.cost||0,price:+p.price||0,qty:+p.qty||0,min:+p.min||0,colors:[]})));
+  (b.invoices||[]).forEach(i=>ops.push(w=>w.set(db.doc(`branches/${id}/invoices/${i.id}`),{...i,pre:i.pre??(S.branches[id].prefix||''),branch:i.branch||bname(id),cancelled:false,by:me.email})));
+  ops.push(w=>w.update(db.doc('branches/'+id),{counter:Math.max(+b.counter||1,S.branches[id].counter||1)}));
+ }
+ try{
+  for(let k=0;k<ops.length;k+=400){const bt=db.batch();ops.slice(k,k+400).forEach(o=>o(bt));await bt.commit()}
+  alert(tt('set.imported'));
+ }catch(e){alert(errMsg(e))}
+}
+
+/* =====================  التشغيل  ===================== */
+if(CONFIGURED&&typeof firebase!=='undefined'){
+ firebase.initializeApp(FB_CONFIG);
+ auth=firebase.auth();db=firebase.firestore();
+ try{db.enablePersistence({synchronizeTabs:true}).catch(()=>{})}catch(e){}
+ auth.onAuthStateChanged(onAuth);
+}
+render();
+if('serviceWorker' in navigator&&/^https?:/.test(location.protocol))window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+</script>
+</body>
+</html>
