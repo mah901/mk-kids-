@@ -300,7 +300,7 @@ const fire=p=>p.catch(e=>alert(errMsg(e)));
 function stopAll(){
  BK.done=false;BK.list=[];
  FIN={loaded:false,loading:false,sup:[],pay:[],rec:[],cust:[],B:{}};
- unsubs.forEach(f=>f());bunsubs.forEach(f=>f());
+ unsubs.forEach(f=>f());bunsubs.forEach(f=>f());shopStop();
  unsubs=[];bunsubs=[];subKey='';seenSales=new Set();D={};U=[];S.branches={};S.cur=null;
 }
 async function onAuth(u){
@@ -357,13 +357,14 @@ function mrange(){
 }
 function subscribeBranches(){
  const ids=Object.keys(S.branches).sort();
+ shopListen();
  const key=ids.join(',')+'|'+period;
  if(key===subKey)return;
  subKey=key;bunsubs.forEach(f=>f());bunsubs=[];
  const [from,to]=range(),[fm,tm]=mrange(),lerr=e=>console.error(e),dn=new Date(),dayStart=new Date(dn.getFullYear(),dn.getMonth(),dn.getDate()).toISOString();
  ids.forEach(id=>{
   D[id]=D[id]||{products:[],invoices:[],moves:[],expenses:[],employees:[],payroll:[],returns:[]};
-  bunsubs.push(db.collection(`branches/${id}/products`).onSnapshot(s=>{D[id].products=s.docs.map(x=>({id:x.id,...x.data()})).sort(byName);refresh()},lerr));
+  bunsubs.push(db.collection(`branches/${id}/products`).onSnapshot(s=>{D[id].products=s.docs.map(x=>({id:x.id,...x.data()})).sort(byName);if(!s.metadata.fromCache&&!s.metadata.hasPendingWrites)shopSched(id);refresh()},lerr));
   let iq=db.collection(`branches/${id}/invoices`);
   if(from)iq=iq.where('date','>=',from);
   if(to)iq=iq.where('date','<',to);
@@ -487,10 +488,10 @@ window.addEventListener('online',()=>render());
 window.addEventListener('offline',()=>render());
 
 function tabsList(){
- const tb=[['dash'],['sales'],['stock'],['inv'],['exp'],['moves']];
+ const tb=[['dash'],['sales'],['stock'],['inv'],['exp'],['moves'],['shop']];
  if(isAdmin())tb.push(['buy'],['debt'],['rep'],['emp'],['all']);
  tb.push(['set']);
- return tb.map(x=>[x[0],x[0]==='set'&&!isAdmin()?tt('tab.acct'):tt('tab.'+x[0])]);
+ return tb.map(x=>{let n=x[0]==='set'&&!isAdmin()?tt('tab.acct'):tt('tab.'+x[0]);if(x[0]==='shop'){const c=Object.keys(S.branches).reduce((a,id)=>a+shNewCount(id),0);if(c)n+=` <span class="pill" style="background:#e67e22;color:#fff">${c}</span>`}return [x[0],n]});
 }
 function plain(){
  document.getElementById('brand').textContent='MK Kids';
@@ -507,17 +508,17 @@ function render(){
  const tl=tabsList();if(!tl.some(x=>x[0]===tab))tab='dash';
  document.getElementById('brand').textContent=S.settings.name+(S.cur?' — '+bname(S.cur):'');
  document.title=S.settings.name;
- let nav=tl.map(x=>`<button class="${tab==x[0]?'on':''}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
+ let nav=tl.map(x=>`<button class="${tab==x[0]?'on':''}" data-t="${x[0]}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
  if(isAdmin())nav+=`<select title="${tt('title.branch')}" onchange="switchBr(this.value)">${Object.keys(S.branches).sort().map(id=>`<option value="${id}" ${id==S.cur?'selected':''}>${esc(bname(id))}</option>`).join('')}</select>`;
  nav+=`<select title="${tt('title.period')}" onchange="setPeriod(this.value)">${['month','prev','all'].map(k=>`<option value="${k}" ${period==k?'selected':''}>${tt('period.'+k)}</option>`).join('')}</select>`;
  document.getElementById('nav').innerHTML=nav;
  document.getElementById('who').innerHTML=`${langSel()}<span><span class="dot" style="background:${navigator.onLine?'#2ecc71':'#e74c3c'}"></span>${navigator.onLine?tt('on'):tt('off')} · ${esc(me.email)}</span>${deferredInstall?`<button class="b g sm" onclick="installApp()">${tt('install')}</button>`:''}<button class="b s sm" onclick="logout()">${tt('logout')}</button>`;
  if(!S.cur||!S.branches[S.cur]){app.innerHTML=`<div class="card">${tt('loadingData')}</div>`;return}
- const v={dash:dashView,sales:salesView,stock:stockView,inv:invView,moves:movesView,set:setView,all:allView,exp:expView,emp:empView,buy:buyView,debt:debtView,rep:repView}[tab]||dashView;
+ const v={dash:dashView,sales:salesView,stock:stockView,inv:invView,moves:movesView,set:setView,all:allView,exp:expView,emp:empView,buy:buyView,debt:debtView,rep:repView,shop:shopView}[tab]||dashView;
  app.innerHTML=v();
 }
 function go(x){tab=x;render();if(FINTABS.includes(x)&&isAdmin())loadFin();if(x==='set'&&isAdmin())loadBackups()}
-function switchBr(id){exch=null;S.cur=id;cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';iq='';editId=null;q='';draft={};fc=[];selP=null;selC='';editEmp=null;payFor=null;render()}
+function switchBr(id){exch=null;SH.fromOrder=null;S.cur=id;cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';iq='';editId=null;q='';draft={};fc=[];selP=null;selC='';editEmp=null;payFor=null;render()}
 function setPeriod(p){period=p;subscribeBranches();render()}
 function closeModal(){curInv=null;const m=document.getElementById('modal');m.style.display='none';m.innerHTML=''}
 
@@ -593,7 +594,7 @@ function salesView(){
  const opts=prods.map(p=>`<option value="${p.id}" ${cur&&cur.id==p.id?'selected':''}>${p.code?esc(p.code)+' — ':''}${esc(p.name)} — ${tt('s.avail')}: ${num(p.qty)}</option>`).join('');
  const copts=cols.map(c=>`<option value="${esc(c.n)}" ${c.n===selC?'selected':''}>${esc(c.n)} (${num(c.q)})</option>`).join('');
  const c=calc(),io=invOpts();
- return `${exch?`<div class="card" style="border:2px solid #e67e22"><b>${tt('rt.banner',{n:esc((exch.inv.pre||'')+exch.inv.no),a:money(exch.c.refund)})}</b><p style="font-size:13px;color:#566">${tt('rt.bannerHint')}</p><div class="act"><button class="b r sm" onclick="cancelExchange()">${tt('rt.cancelEx')}</button></div></div>`:''}<div class="card"><h3>${tt('s.title')} — ${esc(bname(S.cur))}</h3>
+ return `${shopBanner()}${exch?`<div class="card" style="border:2px solid #e67e22"><b>${tt('rt.banner',{n:esc((exch.inv.pre||'')+exch.inv.no),a:money(exch.c.refund)})}</b><p style="font-size:13px;color:#566">${tt('rt.bannerHint')}</p><div class="act"><button class="b r sm" onclick="cancelExchange()">${tt('rt.cancelEx')}</button></div></div>`:''}<div class="card"><h3>${tt('s.title')} — ${esc(bname(S.cur))}</h3>
  ${prods.length?`<div class="row">
   <div><label>${tt('th.item')}</label><select id="sp" onchange="selP=this.value;selC='';render()">${opts}</select></div>
   ${cols.length?`<div><label>${tt('s.color')}</label><select id="sc" onchange="selC=this.value">${copts}</select></div>`:''}
@@ -617,7 +618,7 @@ function salesView(){
   <div><span>${discType==='pct'?tt('s.discountPct',{p:num(disc)}):tt('s.discount')}</span><span>${money(c.disc)}</span></div>
   ${S.settings.vat?`<div><span>${tt('s.vat',{v:num(S.settings.vat)})}</span><span>${money(c.tax)}</span></div>`:''}
   <div class="grand"><span>${tt('s.grand')}</span><span>${money(c.total)}</span></div></div>
- <div class="act"><button id="fbtn" class="b g" onclick="finish()">${tt('s.save')}</button><button class="b s" onclick="cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';render()">${tt('s.clear')}</button></div></div>`;
+ <div class="act"><button id="fbtn" class="b g" onclick="finish()">${tt('s.save')}</button><button class="b s" onclick="cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';SH.fromOrder=null;render()">${tt('s.clear')}</button></div></div>`;
 }
 function addLine(){
  const prods=P(S.cur),p=prods.find(x=>x.id==selP)||prods[0];
@@ -678,7 +679,7 @@ async function finish(){
    tx.set(iref,data);
    return {id:iref.id,...data};
   });
-  cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';notifySale(invoice);render();showInv(invoice);
+  cart=[];cust='';custPhone='';disc=0;discType='amt';payM='cash';shopAfterInvoice(invoice);notifySale(invoice);render();showInv(invoice);
  }catch(e){if(btn)btn.disabled=false;alert(errMsg(e))}
 }
 
@@ -1900,6 +1901,267 @@ async function legacyImport(f){
   alert(tt('set.imported'));
  }catch(e){alert(errMsg(e))}
 }
+
+/* =====================  المتجر الإلكتروني / Online shop  ===================== */
+const SHL={
+ar:{"tab.shop":"المتجر","sh.orders":"طلبات المتجر — {b}","sh.fActive":"الطلبات الحالية","sh.fAll":"كل الطلبات","sh.noOrders":"لا يوجد طلبات","sh.new":"طلب أونلاين جديد","sh.st.new":"جديد","sh.st.confirmed":"مؤكد","sh.st.done":"تم التسليم","sh.st.cancelled":"ملغى",
+"sh.confirm":"تأكيد","sh.toInv":"تحويل لفاتورة","sh.done":"تم التسليم","sh.cancel":"إلغاء","sh.cancelQ":"إلغاء الطلب {r}؟","sh.pickup":"استلام من الفرع","sh.delivery":"توصيل","sh.via.site":"من الموقع","sh.via.whatsapp":"عبر واتساب","sh.inv":"فاتورة {n}",
+"sh.setT":"إعدادات الفرع بالمتجر","sh.active":"إظهار هذا الفرع بالمتجر","sh.nameAr":"اسم الفرع (عربي)","sh.nameEn":"اسم الفرع (إنكليزي)","sh.wa":"رقم واتساب الفرع (مع رمز الدولة، مثال 963933123456)","sh.addrAr":"العنوان (عربي)","sh.addrEn":"العنوان (إنكليزي)","sh.hours":"الدوام (مثال 10:00 – 22:00)","sh.order":"ترتيب الظهور",
+"sh.saved":"تم الحفظ ✓","sh.genT":"إعدادات المتجر العامة","sh.url":"رابط المتجر (بعد رفعه على Netlify)","sh.heroAr":"عنوان الواجهة (عربي)","sh.heroEn":"عنوان الواجهة (إنكليزي)","sh.subAr":"نص تعريفي (عربي)","sh.subEn":"نص تعريفي (إنكليزي)","sh.copy":"نسخ الرابط","sh.copied":"تم نسخ الرابط","sh.open":"فتح المتجر",
+"sh.prodT":"منتجات {b} بالمتجر","sh.prodHint":"الكميات والأسعار تنتقل للمتجر تلقائياً من المخزون. سعر التكلفة لا يظهر للزبائن. المنتج اللي كميته صفر يختفي تلقائياً.","sh.visible":"ظاهر","sh.hidden":"مخفي","sh.outStock":"نفذ","sh.editShop":"صورة ووصف","sh.hide":"إخفاء","sh.show":"إظهار",
+"sh.sync":"مزامنة الآن","sh.synced":"آخر مزامنة: {t}","sh.syncing":"جاري المزامنة...","sh.rulesErr":"المزامنة مع المتجر متوقفة: لازم تضيف قواعد الحماية (Firestore Rules) الخاصة بالمتجر. شوف ملف الشرح.","sh.noSync":"لم تتم المزامنة بعد",
+"sh.editT":"عرض المنتج بالمتجر — {n}","sh.img":"صورة المنتج","sh.imgPick":"اختر صورة","sh.imgDel":"حذف الصورة","sh.pnameEn":"الاسم بالإنكليزي (اختياري)","sh.catAr":"الصنف (عربي) مثال: فساتين","sh.catEn":"الصنف (إنكليزي) مثال: Dresses","sh.descAr":"الوصف (عربي)","sh.descEn":"الوصف (إنكليزي)","sh.hideIt":"إخفاء هذا المنتج من المتجر","sh.imgBusy":"جاري تجهيز الصورة...","sh.imgErr":"تعذّر قراءة الصورة",
+"sh.missing":"هذه الأصناف لم تعد موجودة بالمخزون وتم تجاهلها: {n}","sh.priceDiff":"تنبيه: تم استخدام سعر المخزون الحالي (الطلب كان {a} والآن {b}).","sh.fromOrder":"فاتورة للطلب الأونلاين {r} — بعد الحفظ يتحول الطلب تلقائياً إلى (تم التسليم).","sh.cartBusy":"الفاتورة الحالية فيها أصناف. استبدالها بأصناف الطلب؟","sh.cancelFrom":"إلغاء الربط بالطلب",
+"sh.call":"اتصال","sh.waMsg":"مرحبا {n}، معك MK Kids — {b}. بخصوص طلبك رقم {r}:","sh.items":"{n} قطعة","sh.note":"ملاحظة الزبون"},
+en:{"tab.shop":"Shop","sh.orders":"Shop orders — {b}","sh.fActive":"Open orders","sh.fAll":"All orders","sh.noOrders":"No orders","sh.new":"New online order","sh.st.new":"New","sh.st.confirmed":"Confirmed","sh.st.done":"Delivered","sh.st.cancelled":"Cancelled",
+"sh.confirm":"Confirm","sh.toInv":"Make invoice","sh.done":"Delivered","sh.cancel":"Cancel","sh.cancelQ":"Cancel order {r}?","sh.pickup":"Pick up","sh.delivery":"Delivery","sh.via.site":"Website","sh.via.whatsapp":"WhatsApp","sh.inv":"Invoice {n}",
+"sh.setT":"Branch shop settings","sh.active":"Show this branch in the shop","sh.nameAr":"Branch name (Arabic)","sh.nameEn":"Branch name (English)","sh.wa":"Branch WhatsApp (with country code, e.g. 963933123456)","sh.addrAr":"Address (Arabic)","sh.addrEn":"Address (English)","sh.hours":"Hours (e.g. 10:00 – 22:00)","sh.order":"Display order",
+"sh.saved":"Saved ✓","sh.genT":"General shop settings","sh.url":"Shop link (after uploading to Netlify)","sh.heroAr":"Banner title (Arabic)","sh.heroEn":"Banner title (English)","sh.subAr":"Intro text (Arabic)","sh.subEn":"Intro text (English)","sh.copy":"Copy link","sh.copied":"Link copied","sh.open":"Open shop",
+"sh.prodT":"{b} products in the shop","sh.prodHint":"Stock and prices flow to the shop automatically. Cost price is never shown to customers. Items with zero stock hide automatically.","sh.visible":"Shown","sh.hidden":"Hidden","sh.outStock":"Sold out","sh.editShop":"Photo & text","sh.hide":"Hide","sh.show":"Show",
+"sh.sync":"Sync now","sh.synced":"Last sync: {t}","sh.syncing":"Syncing...","sh.rulesErr":"Shop sync is stopped: add the shop Firestore Rules first (see the setup guide).","sh.noSync":"Not synced yet",
+"sh.editT":"Shop listing — {n}","sh.img":"Product photo","sh.imgPick":"Choose photo","sh.imgDel":"Remove photo","sh.pnameEn":"English name (optional)","sh.catAr":"Category (Arabic) e.g. فساتين","sh.catEn":"Category (English) e.g. Dresses","sh.descAr":"Description (Arabic)","sh.descEn":"Description (English)","sh.hideIt":"Hide this product from the shop","sh.imgBusy":"Preparing photo...","sh.imgErr":"Could not read the photo",
+"sh.missing":"These items no longer exist in stock and were skipped: {n}","sh.priceDiff":"Note: current stock price was used (order had {a}, now {b}).","sh.fromOrder":"Invoice for online order {r} — after saving, the order is marked Delivered automatically.","sh.cartBusy":"The current invoice has items. Replace them with the order items?","sh.cancelFrom":"Unlink order",
+"sh.call":"Call","sh.waMsg":"Hello {n}, this is MK Kids — {b}. About your order {r}:","sh.items":"{n} pcs","sh.note":"Customer note"},
+tr:{"tab.shop":"Mağaza","sh.orders":"Mağaza siparişleri — {b}","sh.fActive":"Açık siparişler","sh.fAll":"Tüm siparişler","sh.noOrders":"Sipariş yok","sh.new":"Yeni online sipariş","sh.st.new":"Yeni","sh.st.confirmed":"Onaylandı","sh.st.done":"Teslim edildi","sh.st.cancelled":"İptal",
+"sh.confirm":"Onayla","sh.toInv":"Faturaya çevir","sh.done":"Teslim edildi","sh.cancel":"İptal","sh.cancelQ":"{r} siparişi iptal edilsin mi?","sh.pickup":"Şubeden teslim","sh.delivery":"Teslimat","sh.via.site":"Web sitesi","sh.via.whatsapp":"WhatsApp","sh.inv":"Fatura {n}",
+"sh.setT":"Şube mağaza ayarları","sh.active":"Bu şubeyi mağazada göster","sh.nameAr":"Şube adı (Arapça)","sh.nameEn":"Şube adı (İngilizce)","sh.wa":"Şube WhatsApp (ülke koduyla, ör. 963933123456)","sh.addrAr":"Adres (Arapça)","sh.addrEn":"Adres (İngilizce)","sh.hours":"Çalışma saatleri","sh.order":"Sıra",
+"sh.saved":"Kaydedildi ✓","sh.genT":"Genel mağaza ayarları","sh.url":"Mağaza linki (Netlify'a yükledikten sonra)","sh.heroAr":"Başlık (Arapça)","sh.heroEn":"Başlık (İngilizce)","sh.subAr":"Tanıtım (Arapça)","sh.subEn":"Tanıtım (İngilizce)","sh.copy":"Linki kopyala","sh.copied":"Link kopyalandı","sh.open":"Mağazayı aç",
+"sh.prodT":"{b} mağaza ürünleri","sh.prodHint":"Stok ve fiyatlar mağazaya otomatik aktarılır. Maliyet fiyatı müşterilere gösterilmez. Stoğu sıfır olan ürün otomatik gizlenir.","sh.visible":"Görünür","sh.hidden":"Gizli","sh.outStock":"Tükendi","sh.editShop":"Fotoğraf & açıklama","sh.hide":"Gizle","sh.show":"Göster",
+"sh.sync":"Şimdi eşitle","sh.synced":"Son eşitleme: {t}","sh.syncing":"Eşitleniyor...","sh.rulesErr":"Mağaza eşitlemesi durdu: önce mağaza Firestore kurallarını ekleyin.","sh.noSync":"Henüz eşitlenmedi",
+"sh.editT":"Mağaza görünümü — {n}","sh.img":"Ürün fotoğrafı","sh.imgPick":"Fotoğraf seç","sh.imgDel":"Fotoğrafı sil","sh.pnameEn":"İngilizce ad (isteğe bağlı)","sh.catAr":"Kategori (Arapça)","sh.catEn":"Kategori (İngilizce)","sh.descAr":"Açıklama (Arapça)","sh.descEn":"Açıklama (İngilizce)","sh.hideIt":"Bu ürünü mağazada gizle","sh.imgBusy":"Fotoğraf hazırlanıyor...","sh.imgErr":"Fotoğraf okunamadı",
+"sh.missing":"Bu ürünler artık stokta yok, atlandı: {n}","sh.priceDiff":"Not: güncel stok fiyatı kullanıldı (sipariş {a}, şimdi {b}).","sh.fromOrder":"{r} online siparişi için fatura — kaydedince sipariş otomatik Teslim edildi olur.","sh.cartBusy":"Mevcut faturada ürünler var. Sipariş ürünleriyle değiştirilsin mi?","sh.cancelFrom":"Sipariş bağlantısını kaldır",
+"sh.call":"Ara","sh.waMsg":"Merhaba {n}, MK Kids — {b}. {r} numaralı siparişiniz hakkında:","sh.items":"{n} adet","sh.note":"Müşteri notu"}
+};
+Object.keys(SHL).forEach(k=>{if(L[k])Object.assign(L[k],SHL[k])});
+
+let SH={orders:{},ounsub:{},okey:'',first:{},items:{},iunsub:null,ibid:null,br:{},bunsub:null,bbid:null,gen:null,gunsub:null,
+ map:{},mapLoaded:{},timer:{},busy:{},last:{},err:'',filter:'active',fromOrder:null,edit:null};
+const shStatus=s=>`<span class="pill" style="background:${({new:'#fff3cd',confirmed:'#e3edfb',done:'#dff5ec',cancelled:'#fde2e2'})[s]||'#eee'}">${tt('sh.st.'+(s||'new'))}</span>`;
+const shNewCount=bid=>(SH.orders[bid]||[]).filter(o=>o.status==='new').length;
+const shHash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
+const shPub=(bid,p)=>({bid,pid:p.id,name:p.name||'',code:p.code||'',price:+p.price||0,qty:+p.qty||0,colors:(p.colors||[]).map(c=>({n:String(c.n||''),q:+c.q||0}))});
+
+/* استماع لطلبات الفروع (ينبّه بطلب جديد حتى لو كنت بتبويب ثاني) */
+function shopListen(){
+ const ids=Object.keys(S.branches).sort(),key=ids.join(',');
+ if(key===SH.okey)return;
+ Object.values(SH.ounsub).forEach(f=>f());SH.ounsub={};SH.okey=key;
+ ids.forEach(id=>{
+  SH.first[id]=true;
+  SH.ounsub[id]=db.collection(`shopOrders/${id}/orders`).orderBy('date','desc').limit(80).onSnapshot(s=>{
+   SH.orders[id]=s.docs.map(d=>({id:d.id,...d.data()}));
+   if(!SH.first[id]&&!s.metadata.hasPendingWrites)s.docChanges().forEach(c=>{if(c.type==='added'&&(c.doc.data().status||'new')==='new')toast('🛒 '+tt('sh.new')+' · '+bname(id)+' · '+(c.doc.data().ref||'')+' · '+num(c.doc.data().total)+' '+(c.doc.data().cur||''))});
+   if(!s.metadata.fromCache)SH.first[id]=false;
+   shTabBadge();if(tab==='shop')refresh();
+  },e=>{console.warn('shop orders',e);SH.err=tt('sh.rulesErr')});
+ });
+}
+function shTabBadge(){
+ const n=Object.keys(S.branches).reduce((a,id)=>a+shNewCount(id),0);
+ const b=[...document.querySelectorAll('#nav button')].find(x=>x.dataset.t==='shop');
+ if(b)b.innerHTML=tt('tab.shop')+(n?` <span class="pill" style="background:#e67e22;color:#fff">${n}</span>`:'');
+}
+function shopStop(){
+ Object.values(SH.ounsub).forEach(f=>f());if(SH.iunsub)SH.iunsub();if(SH.bunsub)SH.bunsub();if(SH.gunsub)SH.gunsub();
+ Object.values(SH.timer).forEach(clearTimeout);
+ SH={...SH,orders:{},ounsub:{},okey:'',first:{},items:{},iunsub:null,ibid:null,br:{},bunsub:null,bbid:null,gen:null,gunsub:null,map:{},mapLoaded:{},timer:{},busy:{},last:{},err:'',fromOrder:null,edit:null};
+}
+/* بيانات تبويب المتجر للفرع الحالي */
+function shopEnsure(){
+ const bid=S.cur;if(!bid)return;
+ if(SH.ibid!==bid){
+  if(SH.iunsub)SH.iunsub();SH.ibid=bid;SH.items={};
+  SH.iunsub=db.collection('shopItems').where('bid','==',bid).onSnapshot(s=>{SH.items={};s.forEach(d=>SH.items[d.data().pid]=d.data());if(tab==='shop')refresh()},e=>{console.warn(e);SH.err=tt('sh.rulesErr');if(tab==='shop')refresh()});
+ }
+ if(SH.bbid!==bid){
+  if(SH.bunsub)SH.bunsub();SH.bbid=bid;
+  SH.bunsub=db.doc('shopBranches/'+bid).onSnapshot(s=>{SH.br[bid]=s.exists?s.data():null;if(tab==='shop')refresh()},e=>console.warn(e));
+ }
+ if(!SH.gunsub){SH.gunsub=()=>{};SH.gunsub=db.doc('shopSettings/main').onSnapshot(s=>{SH.gen=s.exists?s.data():{};if(tab==='shop')refresh()},e=>console.warn(e))}
+}
+
+/* مزامنة المخزون → المتجر (بدون سعر التكلفة) */
+function shopSched(bid){clearTimeout(SH.timer[bid]);SH.timer[bid]=setTimeout(()=>shopSync(bid),2500)}
+async function shopSync(bid,manual){
+ if(SH.busy[bid]||!navigator.onLine||!me)return;
+ SH.busy[bid]=true;if(manual&&tab==='shop')render();
+ try{
+  if(!SH.mapLoaded[bid]){const s=await db.doc('shopSync/'+bid).get();SH.map[bid]=(s.exists&&s.data().m)||{};SH.mapLoaded[bid]=true}
+  const old=SH.map[bid],nw={},ops=[];
+  P(bid).forEach(p=>{
+   const pub=shPub(bid,p),sig=shHash(JSON.stringify(pub));nw[p.id]=sig;
+   if(old[p.id]!==sig||manual)ops.push(w=>w.set(db.doc('shopItems/'+bid+'_'+p.id),old[p.id]?pub:{...pub,ts:Date.now()},{merge:true}));
+  });
+  Object.keys(old).forEach(pid=>{if(!nw[pid]){ops.push(w=>w.delete(db.doc('shopItems/'+bid+'_'+pid)));ops.push(w=>w.delete(db.doc('shopImages/'+bid+'_'+pid)))}});
+  if(isAdmin()&&SH.gen&&SH.gen.currency!==(S.settings.currency||'$'))ops.push(w=>w.set(db.doc('shopSettings/main'),{currency:S.settings.currency||'$'},{merge:true}));
+  if(ops.length||manual){
+   for(let k=0;k<ops.length;k+=400){const b=db.batch();ops.slice(k,k+400).forEach(o=>o(b));await b.commit()}
+   await db.doc('shopSync/'+bid).set({m:nw,at:new Date().toISOString(),by:me.email});
+   SH.map[bid]=nw;
+  }
+  SH.last[bid]=new Date().toISOString();SH.err='';
+ }catch(e){console.warn('shopSync',e);if(e&&e.code==='permission-denied')SH.err=tt('sh.rulesErr');if(manual)alert(errMsg(e))}
+ SH.busy[bid]=false;if(tab==='shop')refresh();
+}
+
+/* الطلبات */
+function shOrderHTML(o,bid){
+ const wa=(o.phone||'').replace(/\D/g,'').replace(/^00/,'').replace(/^0/,'963');
+ const msg=encodeURIComponent(tt('sh.waMsg',{n:o.name||'',b:bname(bid),r:o.ref||''}));
+ const acts=[];
+ if(o.status==='new')acts.push(`<button class="b sm" onclick="shSetSt('${bid}','${o.id}','confirmed')">${tt('sh.confirm')}</button>`);
+ if(o.status==='new'||o.status==='confirmed'){
+  acts.push(`<button class="b g sm" onclick="shToInv('${bid}','${o.id}')">${tt('sh.toInv')}</button>`);
+  acts.push(`<button class="b s sm" onclick="shSetSt('${bid}','${o.id}','done')">${tt('sh.done')}</button>`);
+  acts.push(`<button class="b r sm" onclick="shSetSt('${bid}','${o.id}','cancelled')">${tt('sh.cancel')}</button>`);
+ }
+ return `<div class="card" style="border-inline-start:5px solid ${({new:'#e67e22',confirmed:'#2c5282',done:'#2e8b57',cancelled:'#c0392b'})[o.status]||'#999'};margin-bottom:10px;padding:12px 14px">
+ <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><b>${ltr(o.ref||o.id)} ${shStatus(o.status)} <span class="pill">${tt('sh.via.'+(o.via||'site'))}</span></b><span class="sub">${o.date?fmt(o.date):''}</span></div>
+ <div style="margin-top:6px"><b>${esc(o.name)}</b> · ${ltr(o.phone)} · <a href="tel:${esc(o.phone)}">${tt('sh.call')}</a>${wa?` · <a target="_blank" href="https://wa.me/${wa}?text=${msg}">WhatsApp</a>`:''}</div>
+ <div class="sub">${o.mode==='delivery'?'🚚 '+tt('sh.delivery')+': '+esc(o.addr):'🏬 '+tt('sh.pickup')}</div>
+ <table style="margin-top:6px">${(o.items||[]).map(l=>`<tr><td>${lineName(l)}${l.code?` <span class="sub">${esc(l.code)}</span>`:''}</td><td>× ${num(l.qty)}</td><td>${num(l.price)}</td><td>${num(l.qty*l.price)}</td></tr>`).join('')}
+ <tr><th colspan="3">${tt('sh.items',{n:num(o.count)})}</th><th>${num(o.total)} ${esc(o.cur||'')}</th></tr></table>
+ ${o.note?`<div class="sub" style="background:#fff8e6;padding:6px 8px;border-radius:6px;margin-top:6px"><b>${tt('sh.note')}:</b> ${esc(o.note)}</div>`:''}
+ ${o.invoice?`<div class="sub">🧾 ${tt('sh.inv',{n:esc(o.invoice)})}</div>`:''}
+ ${acts.length?`<div class="act" style="margin-top:8px">${acts.join('')}</div>`:''}</div>`;
+}
+function shSetSt(bid,id,st){
+ const o=(SH.orders[bid]||[]).find(x=>x.id===id);if(!o)return;
+ if(st==='cancelled'&&!confirm(tt('sh.cancelQ',{r:o.ref||id})))return;
+ fire(db.doc(`shopOrders/${bid}/orders/${id}`).update({status:st,by:me.email,at:new Date().toISOString()}));
+}
+function shToInv(bid,id){
+ const o=(SH.orders[bid]||[]).find(x=>x.id===id);if(!o)return;
+ if((cart.length||exch)&&!confirm(tt('sh.cartBusy')))return;
+ exch=null;
+ const prods=P(bid),miss=[],notes=[];cart=[];
+ (o.items||[]).forEach(l=>{
+  const p=prods.find(x=>x.id===l.pid);
+  if(!p||((p.colors||[]).length&&!(p.colors||[]).some(c=>c.n===(l.color||'')))){miss.push(l.name+(l.color?' — '+l.color:''));return}
+  if(+p.price!==+l.price)notes.push(tt('sh.priceDiff',{a:num(l.price),b:num(p.price)}));
+  cart.push({pid:p.id,name:p.name,code:p.code||'',color:l.color||'',qty:+l.qty||1,price:+p.price||0,cost:+p.cost||0});
+ });
+ cust=o.name||'';custPhone=o.phone||'';disc=0;discType='amt';payM='cash';
+ SH.fromOrder={bid,id,ref:o.ref||id};
+ tab='sales';render();window.scrollTo(0,0);
+ if(miss.length)alert(tt('sh.missing',{n:miss.join('، ')}));
+ if(notes.length)toast(notes[0]);
+}
+function shopBanner(){
+ if(!SH.fromOrder||SH.fromOrder.bid!==S.cur)return '';
+ return `<div class="card" style="border:2px solid #2e8b57"><b>🛒 ${tt('sh.fromOrder',{r:esc(SH.fromOrder.ref)})}</b><div class="act"><button class="b s sm" onclick="SH.fromOrder=null;render()">${tt('sh.cancelFrom')}</button></div></div>`;
+}
+function shopAfterInvoice(inv){
+ const f=SH.fromOrder;if(!f)return;SH.fromOrder=null;
+ if(f.bid!==S.cur)return;
+ db.doc(`shopOrders/${f.bid}/orders/${f.id}`).update({status:'done',invoice:(inv.pre||'')+inv.no,invoiceId:inv.id||'',by:me.email,at:new Date().toISOString()}).catch(e=>console.warn(e));
+}
+
+/* واجهة التبويب */
+function shopView(){
+ shopEnsure();
+ const bid=S.cur,b=SH.br[bid]||{},g=SH.gen||{},list=(SH.orders[bid]||[]).filter(o=>SH.filter==='all'||o.status==='new'||o.status==='confirmed');
+ const prods=P(bid),url=(g.url||'').trim();
+ const inp=(id,lb,v,ex)=>`<div><label>${lb}</label><input id="${id}" value="${esc(v||'')}" ${ex||''}></div>`;
+ return `${SH.err?`<div class="card low">${esc(SH.err)}</div>`:''}
+ <div class="card"><div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><h3 style="margin:0">${tt('sh.orders',{b:esc(bname(bid))})}</h3>
+ <select style="width:auto" onchange="SH.filter=this.value;render()"><option value="active" ${SH.filter==='active'?'selected':''}>${tt('sh.fActive')}</option><option value="all" ${SH.filter==='all'?'selected':''}>${tt('sh.fAll')}</option></select></div>
+ ${url?`<div class="act" style="margin-top:8px"><a class="b sm" style="text-decoration:none" target="_blank" href="${esc(url)}">${tt('sh.open')}</a><button class="b s sm" onclick="shCopy()">${tt('sh.copy')}</button></div>`:''}</div>
+ ${list.map(o=>shOrderHTML(o,bid)).join('')||`<div class="card sub">${tt('sh.noOrders')}</div>`}
+
+ <div class="card"><h3>${tt('sh.prodT',{b:esc(bname(bid))})}</h3><p class="sub">${tt('sh.prodHint')}</p>
+ <div class="act" style="margin:6px 0 10px"><button class="b sm" ${SH.busy[bid]?'disabled':''} onclick="shopSync('${bid}',true)">${SH.busy[bid]?tt('sh.syncing'):tt('sh.sync')}</button><span class="sub">${SH.last[bid]?tt('sh.synced',{t:fmt(SH.last[bid])}):tt('sh.noSync')}</span></div>
+ <table><tr><th></th><th>${tt('th.item')}</th><th>${tt('th.sell')}</th><th>${tt('th.avail')}</th><th>${tt('th.status')}</th><th></th></tr>
+ ${prods.map(p=>{const it=SH.items[p.id]||{},hid=!!it.hidden,out=(+p.qty||0)<=0;
+  return `<tr><td style="width:56px">${it.thumb?`<img src="${it.thumb}" style="width:46px;height:56px;object-fit:cover;border-radius:6px">`:'<div style="width:46px;height:56px;border-radius:6px;background:#eef1f6"></div>'}</td>
+  <td>${esc(p.name)}${it.nameEn?`<div class="sub">${esc(it.nameEn)}</div>`:''}${p.code?`<div class="sub">${esc(p.code)}</div>`:''}</td><td>${money(p.price)}</td><td>${num(p.qty)}</td>
+  <td>${hid?`<span class="pill">${tt('sh.hidden')}</span>`:out?`<span class="pill" style="background:#fde2e2">${tt('sh.outStock')}</span>`:`<span class="pill" style="background:#dff5ec">${tt('sh.visible')}</span>`}</td>
+  <td><button class="b sm" onclick="shEdit('${p.id}')">${tt('sh.editShop')}</button> <button class="b s sm" onclick="shToggle('${p.id}')">${hid?tt('sh.show'):tt('sh.hide')}</button></td></tr>`}).join('')||`<tr><td colspan="6">${tt('st.empty')}</td></tr>`}</table></div>
+
+ <div class="card"><h3>${tt('sh.setT')} — ${esc(bname(bid))}</h3>
+ <label style="display:flex;gap:8px;align-items:center;font-size:15px;color:#1d2433"><input type="checkbox" id="sh_act" style="width:auto" ${b.active?'checked':''}> ${tt('sh.active')}</label>
+ <div class="row">${inp('sh_n',tt('sh.nameAr'),b.name||bname(bid))}${inp('sh_ne',tt('sh.nameEn'),b.nameEn)}${inp('sh_wa',tt('sh.wa'),b.whatsapp,'dir="ltr" inputmode="tel"')}</div>
+ <div class="row">${inp('sh_a',tt('sh.addrAr'),b.address)}${inp('sh_ae',tt('sh.addrEn'),b.addressEn)}${inp('sh_h',tt('sh.hours'),b.hours,'dir="ltr"')}${inp('sh_o',tt('sh.order'),b.order??'','type="number"')}</div>
+ <div class="act"><button class="b g" onclick="shSaveBr()">${tt('btn.save')}</button></div></div>
+
+ ${isAdmin()?`<div class="card"><h3>${tt('sh.genT')}</h3>
+ <div class="row">${inp('sg_url',tt('sh.url'),g.url,'dir="ltr" placeholder="https://mk-kids-shop.netlify.app"')}</div>
+ <div class="row">${inp('sg_ha',tt('sh.heroAr'),g.heroAr)}${inp('sg_he',tt('sh.heroEn'),g.heroEn)}</div>
+ <div class="row">${inp('sg_sa',tt('sh.subAr'),g.subAr)}${inp('sg_se',tt('sh.subEn'),g.subEn)}</div>
+ <div class="act"><button class="b g" onclick="shSaveGen()">${tt('btn.save')}</button></div></div>`:''}`;
+}
+const gv=id=>{const e=document.getElementById(id);return e?e.value.trim():''};
+function shSaveBr(){
+ const bid=S.cur,o=gv('sh_o');
+ const d={active:document.getElementById('sh_act').checked,name:gv('sh_n')||bname(bid),nameEn:gv('sh_ne'),whatsapp:gv('sh_wa').replace(/\D/g,''),address:gv('sh_a'),addressEn:gv('sh_ae'),hours:gv('sh_h'),order:o===''?0:(+o||0)};
+ db.doc('shopBranches/'+bid).set(d,{merge:true}).then(()=>{toast(tt('sh.saved'));shopSync(bid)}).catch(e=>alert(errMsg(e)));
+}
+function shSaveGen(){
+ const d={url:gv('sg_url'),heroAr:gv('sg_ha'),heroEn:gv('sg_he'),subAr:gv('sg_sa'),subEn:gv('sg_se'),currency:S.settings.currency||'$',name:S.settings.name||'MK Kids'};
+ db.doc('shopSettings/main').set(d,{merge:true}).then(()=>toast(tt('sh.saved'))).catch(e=>alert(errMsg(e)));
+}
+function shCopy(){const u=(SH.gen&&SH.gen.url)||'';try{navigator.clipboard.writeText(u).then(()=>toast(tt('sh.copied')))}catch(e){prompt('',u)}}
+function shToggle(pid){
+ const bid=S.cur,p=P(bid).find(x=>x.id===pid);if(!p)return;
+ const it=SH.items[pid]||{};
+ fire(db.doc('shopItems/'+bid+'_'+pid).set({...shPub(bid,p),hidden:!it.hidden,...(it.ts?{}:{ts:Date.now()})},{merge:true}));
+}
+/* تعديل صورة ووصف المنتج */
+function shEdit(pid){
+ const bid=S.cur,p=P(bid).find(x=>x.id===pid);if(!p)return;
+ const it=SH.items[pid]||{},cat=String(it.cat||'').split('|');
+ SH.edit={bid,pid,thumb:it.thumb||'',big:null,img:!!it.img,delImg:false};
+ const m=document.getElementById('modal');curInv=null;
+ m.innerHTML=`<div class="box"><h3>${tt('sh.editT',{n:esc(p.name)})}</h3>
+ <div style="display:flex;gap:14px;flex-wrap:wrap;align-items:flex-start">
+  <div id="sh_prev" style="width:150px;height:188px;border-radius:10px;background:#eef1f6 center/cover no-repeat;${it.thumb?`background-image:url('${it.thumb}')`:''}"></div>
+  <div style="flex:1;min-width:200px"><label>${tt('sh.img')}</label><input type="file" accept="image/*" onchange="shPick(this.files[0])"><div class="sub" id="sh_imsg"></div>
+  <div class="act"><button class="b r sm" onclick="shDelImg()">${tt('sh.imgDel')}</button></div></div></div>
+ <div class="row"><div><label>${tt('sh.pnameEn')}</label><input id="se_ne" value="${esc(it.nameEn||'')}" dir="ltr"></div>
+ <div><label>${tt('sh.catAr')}</label><input id="se_ca" value="${esc(cat[0]||'')}" list="sh_cats"></div><div><label>${tt('sh.catEn')}</label><input id="se_ce" value="${esc(cat[1]||'')}" dir="ltr"></div></div>
+ <datalist id="sh_cats">${[...new Set(Object.values(SH.items).map(x=>String(x.cat||'').split('|')[0]).filter(Boolean))].map(c=>`<option value="${esc(c)}">`).join('')}</datalist>
+ <label>${tt('sh.descAr')}</label><textarea id="se_da" rows="3">${esc(it.desc||'')}</textarea>
+ <label>${tt('sh.descEn')}</label><textarea id="se_de" rows="3" dir="ltr">${esc(it.descEn||'')}</textarea>
+ <label style="display:flex;gap:8px;align-items:center;font-size:14px;color:#1d2433;margin-top:10px"><input type="checkbox" id="se_h" style="width:auto" ${it.hidden?'checked':''}> ${tt('sh.hideIt')}</label>
+ <div class="act"><button class="b g" id="se_btn" onclick="shSaveItem()">${tt('btn.save')}</button><button class="b s" onclick="SH.edit=null;closeModal()">${tt('btn.cancel')}</button></div></div>`;
+ m.style.display='block';
+}
+function shLoadImg(file){return new Promise((res,rej)=>{const u=URL.createObjectURL(file),im=new Image();im.onload=()=>{res(im)};im.onerror=()=>{URL.revokeObjectURL(u);rej(new Error('img'))};im.src=u})}
+function shDraw(im,max,q){
+ const r=Math.min(1,max/Math.max(im.naturalWidth,im.naturalHeight)),w=Math.round(im.naturalWidth*r),h=Math.round(im.naturalHeight*r);
+ const c=document.createElement('canvas');c.width=w;c.height=h;const x=c.getContext('2d');x.fillStyle='#fff';x.fillRect(0,0,w,h);x.drawImage(im,0,0,w,h);
+ let d=c.toDataURL('image/webp',q);if(!d.startsWith('data:image/webp'))d=c.toDataURL('image/jpeg',q);return d;
+}
+async function shPick(file){
+ if(!file||!SH.edit)return;
+ const msg=document.getElementById('sh_imsg'),btn=document.getElementById('se_btn');msg.textContent=tt('sh.imgBusy');btn.disabled=true;
+ try{
+  const im=await shLoadImg(file);
+  const thumb=shDraw(im,480,.72);let q=.8,big=shDraw(im,1200,q);
+  while(big.length>700000&&q>.4){q-=.1;big=shDraw(im,1200,q)}
+  if(big.length>900000)big=shDraw(im,900,.6);
+  SH.edit.thumb=thumb;SH.edit.big=big;SH.edit.delImg=false;
+  document.getElementById('sh_prev').style.backgroundImage=`url('${thumb}')`;
+  msg.textContent=Math.round((thumb.length+big.length)/1024)+' KB';
+ }catch(e){msg.textContent=tt('sh.imgErr')}
+ btn.disabled=false;
+}
+function shDelImg(){if(!SH.edit)return;SH.edit.thumb='';SH.edit.big=null;SH.edit.delImg=true;document.getElementById('sh_prev').style.backgroundImage='none'}
+async function shSaveItem(){
+ const e=SH.edit;if(!e)return;const p=P(e.bid).find(x=>x.id===e.pid);if(!p)return closeModal();
+ const ca=gv('se_ca'),ce=gv('se_ce'),it=SH.items[e.pid]||{};
+ const d={...shPub(e.bid,p),nameEn:gv('se_ne'),cat:ca?(ce?ca+'|'+ce:ca):'',desc:gv('se_da'),descEn:gv('se_de'),hidden:document.getElementById('se_h').checked,thumb:e.thumb||'',img:e.delImg?false:(e.big?true:!!it.img)};
+ if(!it.ts)d.ts=Date.now();
+ const btn=document.getElementById('se_btn');btn.disabled=true;
+ try{
+  const b=db.batch();
+  b.set(db.doc('shopItems/'+e.bid+'_'+e.pid),d,{merge:true});
+  if(e.big)b.set(db.doc('shopImages/'+e.bid+'_'+e.pid),{bid:e.bid,pid:e.pid,d:e.big});
+  else if(e.delImg)b.delete(db.doc('shopImages/'+e.bid+'_'+e.pid));
+  await b.commit();SH.edit=null;closeModal();toast(tt('sh.saved'));
+ }catch(x){btn.disabled=false;alert(errMsg(x))}
+}
+
 
 /* =====================  التشغيل  ===================== */
 if(CONFIGURED&&typeof firebase!=='undefined'){
