@@ -45,6 +45,7 @@ button.sm{padding:4px 10px;font-size:12px}
 .pill{display:inline-block;padding:2px 8px;border-radius:10px;background:#e8eef7;font-size:12px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:4px}
 .crow{display:grid;grid-template-columns:1fr 110px auto;gap:8px;margin-bottom:6px;max-width:460px}
+.crow3{grid-template-columns:1fr 1fr 90px auto;max-width:560px}
 #modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.5);overflow:auto;padding:20px;z-index:9}
 #modal .box{background:#fff;max-width:760px;margin:0 auto;padding:24px;border-radius:10px;position:relative}
 #modal .box.small{max-width:380px}
@@ -121,10 +122,10 @@ ar:{
 "th.item":"الصنف","th.avail":"المتوفر","th.min":"حد التنبيه","th.date":"التاريخ","th.branch":"الفرع","th.type":"النوع","th.qty":"الكمية","th.note":"ملاحظة","th.user":"المستخدم","th.code":"الرمز","th.cost":"التكلفة","th.sell":"البيع","th.price":"السعر","th.sum":"المجموع","th.no":"رقم","th.customer":"الزبون","th.total":"الإجمالي","th.by":"بواسطة","th.email":"البريد",
 "m.title":"سجل الحركات (آخر {n})","m.all":"كل الفروع","m.empty":"لا توجد حركات",
 "mv.sale":"بيع","mv.add":"إضافة كمية","mv.new":"صنف جديد","mv.edit":"تعديل صنف","mv.del":"حذف صنف","mv.cancel":"إلغاء فاتورة",
-"s.title":"فاتورة بيع جديدة","s.color":"اللون","s.addLine":"إضافة للفاتورة","s.needProducts":"أضف أصنافاً في تبويب المخزون أولاً.","s.del":"حذف","s.empty":"الفاتورة فارغة","s.customer":"اسم الزبون","s.discount":"الخصم","s.vat":"الضريبة ({v}%)","s.grand":"الإجمالي","s.save":"حفظ وإصدار الفاتورة","s.clear":"تفريغ","s.avail":"متوفر","s.badLine":"اختر صنفاً وكمية صحيحة","s.noItem":"الصنف “{n}” لم يعد موجوداً","s.noColor":"اللون “{c}” للصنف “{n}” غير موجود","s.exceed":"الكمية المطلوبة من “{n}” أكبر من المتوفر ({q})",
-"st.add":"إضافة صنف","st.edit":"تعديل صنف","f.name":"اسم الصنف","f.code":"الرمز / الباركود","f.cost":"سعر التكلفة","f.price":"سعر البيع","f.qty":"الكمية","f.min":"حد التنبيه","f.colors":"الألوان (كل لون بكميته)","f.colorName":"اسم اللون","f.addColor":"+ إضافة لون","f.qtyAuto":"الكمية تُحسب من مجموع الألوان","f.needName":"اكتب اسم الصنف","f.colorNeedName":"اكتب اسم اللون","f.badQty":"كمية غير صحيحة","f.colorDup":"اللون “{c}” مكرر",
+"s.title":"فاتورة بيع جديدة","s.color":"اللون / المقاس","f.size":"المقاس","f.genColors":"الألوان (افصل بينها بفاصلة)","f.genSizes":"المقاسات (افصل بينها بفاصلة)","f.gen":"إنشاء كل الألوان × المقاسات","f.genHint":"مثال: أحمر، أزرق — والمقاسات: 2، 4، 6، 8","s.addLine":"إضافة للفاتورة","s.needProducts":"أضف أصنافاً في تبويب المخزون أولاً.","s.del":"حذف","s.empty":"الفاتورة فارغة","s.customer":"اسم الزبون","s.discount":"الخصم","s.vat":"الضريبة ({v}%)","s.grand":"الإجمالي","s.save":"حفظ وإصدار الفاتورة","s.clear":"تفريغ","s.avail":"متوفر","s.badLine":"اختر صنفاً وكمية صحيحة","s.noItem":"الصنف “{n}” لم يعد موجوداً","s.noColor":"اللون “{c}” للصنف “{n}” غير موجود","s.exceed":"الكمية المطلوبة من “{n}” أكبر من المتوفر ({q})",
+"st.add":"إضافة صنف","st.edit":"تعديل صنف","f.name":"اسم الصنف","f.code":"الرمز / الباركود","f.cost":"سعر التكلفة","f.price":"سعر البيع","f.qty":"الكمية","f.min":"حد التنبيه","f.colors":"الألوان والمقاسات (كل لون ومقاس بكميته)","f.colorName":"اسم اللون","f.addColor":"+ إضافة سطر","f.qtyAuto":"الكمية تُحسب من مجموع الألوان","f.needName":"اكتب اسم الصنف","f.colorNeedName":"اكتب اللون أو المقاس","f.badQty":"كمية غير صحيحة","f.colorDup":"اللون “{c}” مكرر",
 "btn.add":"إضافة","btn.saveEdit":"حفظ التعديل","btn.cancel":"إلغاء","btn.save":"حفظ","btn.close":"إغلاق","btn.edit":"تعديل","btn.delete":"حذف","btn.confirm":"تأكيد",
-"st.search":"بحث...","st.addQty":"+ كمية","st.empty":"لا يوجد أصناف","st.delConfirm":"حذف الصنف “{n}”؟","add.title":"إضافة كمية — {n}","add.newColor":"+ لون جديد","add.newColorName":"اسم اللون الجديد","add.bad":"أدخل كمية صحيحة",
+"st.search":"بحث...","st.addQty":"+ كمية","st.empty":"لا يوجد أصناف","st.delConfirm":"حذف الصنف “{n}”؟","add.title":"إضافة كمية — {n}","add.newColor":"+ لون/مقاس جديد","add.newColorName":"اسم اللون الجديد","add.bad":"أدخل كمية صحيحة",
 "i.title":"سجل الفواتير","i.empty":"لا يوجد فواتير في هذه الفترة","i.view":"عرض / طباعة","i.cancel":"إلغاء الفاتورة","i.cancelConfirm":"إلغاء الفاتورة؟ الكميات سترجع لمخزون الفرع، وتبقى الفاتورة في السجل كملغاة.","i.notFound":"الفاتورة غير موجودة","i.already":"الفاتورة ملغاة مسبقاً",
 "inv.title":"فاتورة","inv.no":"رقم: {n}","inv.date":"التاريخ: {d}","inv.customer":"الزبون","inv.cash":"زبون نقدي","inv.phone":"هاتف: {p}","inv.tax":"الرقم الضريبي: {t}","inv.thanks":"شكراً لتعاملكم معنا","inv.cancelled":"ملغاة","inv.print":"طباعة","inv.paper":"حجم الورق","inv.r80":"إيصال 80mm","inv.r58":"إيصال 58mm","inv.a4":"ورق A4",
 "x.add":"إضافة مصروف","x.date":"التاريخ","x.cat":"النوع","x.amount":"المبلغ","x.note":"ملاحظة","x.list":"المصاريف ({p}) — الإجمالي {t}","x.empty":"لا توجد مصاريف في هذه الفترة","x.badAmount":"اكتب مبلغاً صحيحاً","x.pickDate":"اختر التاريخ","x.outPeriod":"تمت الإضافة، لكنها خارج الفترة المعروضة. غيّر الفترة من الأعلى لتراها.","x.delConfirm":"حذف مصروف “{c}” بمبلغ {a}؟",
@@ -158,10 +159,10 @@ tr:{
 "th.item":"Ürün","th.avail":"Mevcut","th.min":"Uyarı Limiti","th.date":"Tarih","th.branch":"Şube","th.type":"Tür","th.qty":"Adet","th.note":"Not","th.user":"Kullanıcı","th.code":"Kod","th.cost":"Maliyet","th.sell":"Satış","th.price":"Fiyat","th.sum":"Toplam","th.no":"No","th.customer":"Müşteri","th.total":"Genel Toplam","th.by":"İşlemi Yapan","th.email":"E-posta",
 "m.title":"Hareket Kaydı (son {n})","m.all":"Tüm Şubeler","m.empty":"Hareket yok",
 "mv.sale":"Satış","mv.add":"Stok Ekleme","mv.new":"Yeni Ürün","mv.edit":"Ürün Düzenleme","mv.del":"Ürün Silme","mv.cancel":"Fatura İptali",
-"s.title":"Yeni Satış Faturası","s.color":"Renk","s.addLine":"Faturaya Ekle","s.needProducts":"Önce Stok sekmesinden ürün ekleyin.","s.del":"Sil","s.empty":"Fatura boş","s.customer":"Müşteri Adı","s.discount":"İndirim","s.vat":"KDV (%{v})","s.grand":"Genel Toplam","s.save":"Kaydet ve Fatura Kes","s.clear":"Temizle","s.avail":"mevcut","s.badLine":"Geçerli bir ürün ve adet seçin","s.noItem":"“{n}” ürünü artık yok","s.noColor":"“{n}” ürününde “{c}” rengi yok","s.exceed":"“{n}” için istenen adet mevcut stoktan fazla ({q})",
-"st.add":"Ürün Ekle","st.edit":"Ürünü Düzenle","f.name":"Ürün Adı","f.code":"Kod / Barkod","f.cost":"Maliyet Fiyatı","f.price":"Satış Fiyatı","f.qty":"Adet","f.min":"Uyarı Limiti","f.colors":"Renkler (her rengin adedi)","f.colorName":"Renk adı","f.addColor":"+ Renk Ekle","f.qtyAuto":"Adet, renklerin toplamından hesaplanır","f.needName":"Ürün adını yazın","f.colorNeedName":"Renk adını yazın","f.badQty":"Geçersiz adet","f.colorDup":"“{c}” rengi tekrarlanıyor",
+"s.title":"Yeni Satış Faturası","s.color":"Renk / Beden","f.size":"Beden","f.genColors":"Renkler (virgülle ayırın)","f.genSizes":"Bedenler (virgülle ayırın)","f.gen":"Tüm renk × beden satırlarını oluştur","f.genHint":"Örnek: Kırmızı, Mavi — bedenler: 2, 4, 6, 8","s.addLine":"Faturaya Ekle","s.needProducts":"Önce Stok sekmesinden ürün ekleyin.","s.del":"Sil","s.empty":"Fatura boş","s.customer":"Müşteri Adı","s.discount":"İndirim","s.vat":"KDV (%{v})","s.grand":"Genel Toplam","s.save":"Kaydet ve Fatura Kes","s.clear":"Temizle","s.avail":"mevcut","s.badLine":"Geçerli bir ürün ve adet seçin","s.noItem":"“{n}” ürünü artık yok","s.noColor":"“{n}” ürününde “{c}” rengi yok","s.exceed":"“{n}” için istenen adet mevcut stoktan fazla ({q})",
+"st.add":"Ürün Ekle","st.edit":"Ürünü Düzenle","f.name":"Ürün Adı","f.code":"Kod / Barkod","f.cost":"Maliyet Fiyatı","f.price":"Satış Fiyatı","f.qty":"Adet","f.min":"Uyarı Limiti","f.colors":"Renkler ve bedenler (her biri kendi adediyle)","f.colorName":"Renk adı","f.addColor":"+ Satır ekle","f.qtyAuto":"Adet, renklerin toplamından hesaplanır","f.needName":"Ürün adını yazın","f.colorNeedName":"Renk veya beden yazın","f.badQty":"Geçersiz adet","f.colorDup":"“{c}” rengi tekrarlanıyor",
 "btn.add":"Ekle","btn.saveEdit":"Değişikliği Kaydet","btn.cancel":"İptal","btn.save":"Kaydet","btn.close":"Kapat","btn.edit":"Düzenle","btn.delete":"Sil","btn.confirm":"Onayla",
-"st.search":"Ara...","st.addQty":"+ Adet","st.empty":"Ürün yok","st.delConfirm":"“{n}” ürünü silinsin mi?","add.title":"Stok Ekle — {n}","add.newColor":"+ Yeni renk","add.newColorName":"Yeni renk adı","add.bad":"Geçerli bir adet girin",
+"st.search":"Ara...","st.addQty":"+ Adet","st.empty":"Ürün yok","st.delConfirm":"“{n}” ürünü silinsin mi?","add.title":"Stok Ekle — {n}","add.newColor":"+ Yeni renk/beden","add.newColorName":"Yeni renk adı","add.bad":"Geçerli bir adet girin",
 "i.title":"Fatura Kayıtları","i.empty":"Bu dönemde fatura yok","i.view":"Görüntüle / Yazdır","i.cancel":"Faturayı İptal Et","i.cancelConfirm":"Fatura iptal edilsin mi? Adetler şube stoğuna geri döner, fatura kayıtlarda iptal olarak kalır.","i.notFound":"Fatura bulunamadı","i.already":"Fatura zaten iptal edilmiş",
 "inv.title":"FATURA","inv.no":"No: {n}","inv.date":"Tarih: {d}","inv.customer":"Müşteri","inv.cash":"Peşin Müşteri","inv.phone":"Tel: {p}","inv.tax":"Vergi No: {t}","inv.thanks":"Bizi tercih ettiğiniz için teşekkürler","inv.cancelled":"İPTAL","inv.print":"Yazdır","inv.paper":"Kağıt boyutu","inv.r80":"Fiş 80mm","inv.r58":"Fiş 58mm","inv.a4":"A4 kağıt",
 "x.add":"Gider Ekle","x.date":"Tarih","x.cat":"Tür","x.amount":"Tutar","x.note":"Not","x.list":"Giderler ({p}) — Toplam {t}","x.empty":"Bu dönemde gider yok","x.badAmount":"Geçerli bir tutar yazın","x.pickDate":"Tarihi seçin","x.outPeriod":"Eklendi, ancak gösterilen dönemin dışında. Görmek için yukarıdan dönemi değiştirin.","x.delConfirm":"“{c}” giderini ({a}) silmek istiyor musunuz?",
@@ -195,10 +196,10 @@ en:{
 "th.item":"Item","th.avail":"In stock","th.min":"Alert level","th.date":"Date","th.branch":"Branch","th.type":"Type","th.qty":"Qty","th.note":"Note","th.user":"User","th.code":"Code","th.cost":"Cost","th.sell":"Price","th.price":"Price","th.sum":"Total","th.no":"No.","th.customer":"Customer","th.total":"Total","th.by":"By","th.email":"Email",
 "m.title":"Movement log (last {n})","m.all":"All branches","m.empty":"No movements",
 "mv.sale":"Sale","mv.add":"Stock added","mv.new":"New item","mv.edit":"Item edited","mv.del":"Item deleted","mv.cancel":"Invoice cancelled",
-"s.title":"New sales invoice","s.color":"Color","s.addLine":"Add to invoice","s.needProducts":"Add items in the Inventory tab first.","s.del":"Remove","s.empty":"The invoice is empty","s.customer":"Customer name","s.discount":"Discount","s.vat":"VAT ({v}%)","s.grand":"Total","s.save":"Save and issue invoice","s.clear":"Clear","s.avail":"in stock","s.badLine":"Choose an item and a valid quantity","s.noItem":"Item “{n}” no longer exists","s.noColor":"Color “{c}” of item “{n}” does not exist","s.exceed":"Requested quantity of “{n}” exceeds stock ({q})",
-"st.add":"Add item","st.edit":"Edit item","f.name":"Item name","f.code":"Code / Barcode","f.cost":"Cost price","f.price":"Selling price","f.qty":"Quantity","f.min":"Alert level","f.colors":"Colors (quantity per color)","f.colorName":"Color name","f.addColor":"+ Add color","f.qtyAuto":"Quantity is the sum of the colors","f.needName":"Enter the item name","f.colorNeedName":"Enter the color name","f.badQty":"Invalid quantity","f.colorDup":"Color “{c}” is duplicated",
+"s.title":"New sales invoice","s.color":"Color / Size","f.size":"Size","f.genColors":"Colors (comma separated)","f.genSizes":"Sizes (comma separated)","f.gen":"Create all colors × sizes","f.genHint":"e.g. Red, Blue — sizes: 2, 4, 6, 8","s.addLine":"Add to invoice","s.needProducts":"Add items in the Inventory tab first.","s.del":"Remove","s.empty":"The invoice is empty","s.customer":"Customer name","s.discount":"Discount","s.vat":"VAT ({v}%)","s.grand":"Total","s.save":"Save and issue invoice","s.clear":"Clear","s.avail":"in stock","s.badLine":"Choose an item and a valid quantity","s.noItem":"Item “{n}” no longer exists","s.noColor":"Color “{c}” of item “{n}” does not exist","s.exceed":"Requested quantity of “{n}” exceeds stock ({q})",
+"st.add":"Add item","st.edit":"Edit item","f.name":"Item name","f.code":"Code / Barcode","f.cost":"Cost price","f.price":"Selling price","f.qty":"Quantity","f.min":"Alert level","f.colors":"Colors & sizes (quantity for each)","f.colorName":"Color name","f.addColor":"+ Add row","f.qtyAuto":"Quantity is the sum of the colors","f.needName":"Enter the item name","f.colorNeedName":"Enter a color or size","f.badQty":"Invalid quantity","f.colorDup":"Color “{c}” is duplicated",
 "btn.add":"Add","btn.saveEdit":"Save changes","btn.cancel":"Cancel","btn.save":"Save","btn.close":"Close","btn.edit":"Edit","btn.delete":"Delete","btn.confirm":"Confirm",
-"st.search":"Search...","st.addQty":"+ Qty","st.empty":"No items","st.delConfirm":"Delete item “{n}”?","add.title":"Add stock — {n}","add.newColor":"+ New color","add.newColorName":"New color name","add.bad":"Enter a valid quantity",
+"st.search":"Search...","st.addQty":"+ Qty","st.empty":"No items","st.delConfirm":"Delete item “{n}”?","add.title":"Add stock — {n}","add.newColor":"+ New color/size","add.newColorName":"New color name","add.bad":"Enter a valid quantity",
 "i.title":"Invoice log","i.empty":"No invoices in this period","i.view":"View / Print","i.cancel":"Cancel invoice","i.cancelConfirm":"Cancel this invoice? The quantities return to the branch stock and the invoice stays in the log as cancelled.","i.notFound":"Invoice not found","i.already":"The invoice is already cancelled",
 "inv.title":"INVOICE","inv.no":"No: {n}","inv.date":"Date: {d}","inv.customer":"Customer","inv.cash":"Cash customer","inv.phone":"Tel: {p}","inv.tax":"Tax ID: {t}","inv.thanks":"Thank you for your business","inv.cancelled":"CANCELLED","inv.print":"Print","inv.paper":"Paper size","inv.r80":"Receipt 80mm","inv.r58":"Receipt 58mm","inv.a4":"A4 paper",
 "x.add":"Add expense","x.date":"Date","x.cat":"Type","x.amount":"Amount","x.note":"Note","x.list":"Expenses ({p}) — Total {t}","x.empty":"No expenses in this period","x.badAmount":"Enter a valid amount","x.pickDate":"Choose the date","x.outPeriod":"Added, but it is outside the period shown. Change the period at the top to see it.","x.delConfirm":"Delete the “{c}” expense of {a}?",
@@ -277,6 +278,12 @@ const PR=b=>(D[b]&&D[b].payroll)||[];
 const bname=id=>(S.branches[id]&&S.branches[id].name)||id;
 const byName=(a,b)=>String(a.name).localeCompare(String(b.name),lang==='ar'?'ar':lang);
 const sumColors=cs=>cs.reduce((a,c)=>a+(+c.q||0),0);
+/* الألوان والمقاسات: كل سطر {n,c,s,q} — n = "اللون · المقاس" */
+const VSEP=' · ';
+const vName=(c,s)=>c&&s?c+VSEP+s:(c||s||'');
+const vC=x=>x.c!=null?String(x.c):(String(x.n||'').includes(VSEP)?String(x.n).split(VSEP)[0]:String(x.n||''));
+const vS=x=>x.s!=null?String(x.s):(String(x.n||'').includes(VSEP)?String(x.n).split(VSEP).slice(1).join(VSEP):'');
+const sizeSort=(a,b)=>{const x=parseFloat(a),y=parseFloat(b);if(!isNaN(x)&&!isNaN(y)&&x!==y)return x-y;if(!isNaN(x)!==!isNaN(y))return isNaN(x)?1:-1;return String(a).localeCompare(String(b))};
 const periodLabel=()=>tt('period.'+period);
 
 function errMsg(e){
@@ -654,7 +661,7 @@ async function finish(){
    }
    const writes=[];
    for(const [r,p,lines] of snaps){
-    const colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+    const colors=(p.colors||[]).map(x=>({...x,q:+x.q||0}));
     let qty=+p.qty||0;
     for(const l of lines){
      if(colors.length){
@@ -686,7 +693,10 @@ async function finish(){
 /* =====================  المخزون والألوان  ===================== */
 function colorsLine(p){
  const cs=p.colors||[];
- return cs.length?`<div class="sub">${cs.map(c=>`${esc(c.n)}: <span class="${(+c.q)<=0?'low':''}">${num(c.q)}</span>`).join(' · ')}</div>`:'';
+ if(!cs.length)return '';
+ if(!cs.some(c=>vS(c)))return `<div class="sub">${cs.map(c=>`${esc(c.n)}: <span class="${(+c.q)<=0?'low':''}">${num(c.q)}</span>`).join(' · ')}</div>`;
+ const g={};cs.forEach(c=>{(g[vC(c)]=g[vC(c)]||[]).push(c)});
+ return Object.keys(g).map(k=>`<div class="sub"><b>${esc(k||tt('f.size'))}:</b> ${g[k].slice().sort((a,b)=>sizeSort(vS(a),vS(b))).map(c=>`${esc(vS(c)||'—')} (<span class="${(+c.q)<=0?'low':''}">${num(c.q)}</span>)`).join('  ')}</div>`).join('');
 }
 function plistHTML(){
  const k=q.toLowerCase();
@@ -710,25 +720,35 @@ function stockView(){
   <div><label>${tt('f.qty')}</label>${fc.length?`<input value="${num(total)}" disabled title="${tt('f.qtyAuto')}">`:`<input type="number" step="any" value="${dv('qty')}" oninput="draft.qty=this.value">`}</div>
   <div><label>${tt('f.min')}</label><input type="number" step="any" value="${dv('min',5)}" oninput="draft.min=this.value"></div></div>
  <label style="margin-top:14px">${tt('f.colors')}</label>
- ${fc.map((c,i)=>`<div class="crow"><input placeholder="${tt('f.colorName')}" value="${esc(c.n)}" oninput="fc[${i}].n=this.value"><input type="number" min="0" step="any" placeholder="${tt('th.qty')}" value="${esc(c.q)}" oninput="fc[${i}].q=this.value;fcTotal()"><button class="b r sm" onclick="fc.splice(${i},1);render()">×</button></div>`).join('')}
+ ${fc.map((c,i)=>`<div class="crow crow3"><input placeholder="${tt('f.colorName')}" value="${esc(c.c)}" oninput="fc[${i}].c=this.value"><input placeholder="${tt('f.size')}" value="${esc(c.s)}" oninput="fc[${i}].s=this.value"><input type="number" min="0" step="any" placeholder="${tt('th.qty')}" value="${esc(c.q)}" oninput="fc[${i}].q=this.value;fcTotal()"><button class="b r sm" onclick="fc.splice(${i},1);render()">×</button></div>`).join('')}
  ${fc.length?`<div class="sub" id="fctot">${tt('f.qtyAuto')}: <b>${num(total)}</b></div>`:''}
- <div class="act"><button class="b s sm" onclick="fc.push({n:'',q:''});render()">${tt('f.addColor')}</button></div>
+ <div class="act"><button class="b s sm" onclick="fc.push({c:'',s:'',q:''});render()">${tt('f.addColor')}</button></div>
+ <div class="row" style="max-width:640px;margin-top:6px"><div><label>${tt('f.genColors')}</label><input id="gnc" placeholder="أحمر، أزرق"></div><div><label>${tt('f.genSizes')}</label><input id="gns" placeholder="2، 4، 6، 8"></div><div><button class="b sm" onclick="genRows()">${tt('f.gen')}</button></div></div>
  <div class="act"><button class="b g" onclick="saveProd()">${editId?tt('btn.saveEdit'):tt('btn.add')}</button>
  ${editId?`<button class="b s" onclick="cancelEdit()">${tt('btn.cancel')}</button>`:''}</div></div>
  <div class="card"><div class="row" style="margin-bottom:10px"><div><input placeholder="${tt('st.search')}" value="${esc(q)}" oninput="q=this.value;document.getElementById('plist').innerHTML=plistHTML()"></div><div>${exBtns('stk')}</div></div>
  <div id="plist">${plistHTML()}</div></div>`;
 }
+function genRows(){
+ const sp=v=>String(v||'').split(/[,،\n]+/).map(x=>x.trim()).filter(Boolean);
+ const cs=sp(document.getElementById('gnc').value),ss=sp(document.getElementById('gns').value);
+ if(!cs.length&&!ss.length)return alert(tt('f.genHint'));
+ (cs.length?cs:['']).forEach(c=>(ss.length?ss:['']).forEach(sz=>{
+  if(!fc.some(r=>String(r.c||'').trim().toLowerCase()===c.toLowerCase()&&String(r.s||'').trim().toLowerCase()===sz.toLowerCase()))fc.push({c,s:sz,q:''});
+ }));
+ render();
+}
 function fcTotal(){const el=document.getElementById('fctot');if(el)el.innerHTML=tt('f.qtyAuto')+': <b>'+num(sumColors(fc))+'</b>'}
 function startEdit(id){
  const e=P(S.cur).find(p=>p.id==id);if(!e)return;
  editId=id;draft={name:e.name,code:e.code||'',cost:e.cost,price:e.price,qty:e.qty,min:e.min};
- fc=(e.colors||[]).map(c=>({n:c.n,q:c.q}));
+ fc=(e.colors||[]).map(c=>({c:vC(c),s:vS(c),q:c.q}));
  render();window.scrollTo&&window.scrollTo(0,0);
 }
 function cancelEdit(){editId=null;draft={};fc=[];render()}
 function saveProd(){
  const name=(draft.name||'').trim();if(!name)return alert(tt('f.needName'));
- const rows=fc.map(c=>({n:String(c.n||'').trim(),q:(c.q===''||c.q==null)?0:+c.q})).filter(c=>c.n||c.q);
+ const rows=fc.map(c=>{const co=String(c.c||'').trim(),sz=String(c.s||'').trim();return {n:vName(co,sz),c:co,s:sz,q:(c.q===''||c.q==null)?0:+c.q}}).filter(c=>c.n||c.q);
  const seen=new Set();
  for(const c of rows){
   if(!c.n)return alert(tt('f.colorNeedName'));
@@ -752,7 +772,7 @@ function openAdd(id){
  const m=document.getElementById('modal');curInv=null;
  m.innerHTML=`<div class="box small"><h3>${tt('add.title',{n:esc(p.name)})}</h3>
  ${cs.length?`<label>${tt('s.color')}</label><select id="ac" onchange="document.getElementById('acn').style.display=this.value==='__new'?'block':'none'">${cs.map(c=>`<option value="${esc(c.n)}">${esc(c.n)} (${num(c.q)})</option>`).join('')}<option value="__new">${tt('add.newColor')}</option></select>
- <input id="acn" placeholder="${tt('add.newColorName')}" style="display:none;margin-top:6px">`:''}
+ <div id="acn" style="display:none;margin-top:6px;gap:6px"><input id="acn_c" placeholder="${tt('f.colorName')}"><input id="acn_s" placeholder="${tt('f.size')}" style="margin-top:6px"></div>`:''}
  <label>${tt('th.qty')}</label><input id="aq" type="number" min="0" step="any">
  <div class="act"><button class="b g" onclick="doAdd('${id}')">${tt('btn.confirm')}</button><button class="b s" onclick="closeModal()">${tt('btn.cancel')}</button></div></div>`;
  m.style.display='block';
@@ -770,14 +790,15 @@ async function doAdd(id){
    await b.commit();
   }else{
    const sel=document.getElementById('ac').value;
-   const cname=sel==='__new'?document.getElementById('acn').value.trim():sel;
+   const nc=document.getElementById('acn_c').value.trim(),ns=document.getElementById('acn_s').value.trim();
+   const cname=sel==='__new'?vName(nc,ns):sel;
    if(!cname)return alert(tt('f.colorNeedName'));
    await db.runTransaction(async tx=>{
     const r=db.doc(`branches/${bid}/products/${id}`);
     const s=await tx.get(r);if(!s.exists)throw new Error(tt('s.noItem',{n:p.name}));
-    const colors=(s.data().colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+    const colors=(s.data().colors||[]).map(x=>({...x,q:+x.q||0}));
     const ex=colors.find(x=>x.n.toLowerCase()===cname.toLowerCase());
-    if(ex)ex.q+=n;else colors.push({n:cname,q:n});
+    if(ex)ex.q+=n;else colors.push(sel==='__new'?{n:cname,c:nc,s:ns,q:n}:{n:cname,q:n});
     tx.update(r,{colors,qty:sumColors(colors)});
     log(tx,bid,'add',p.name,n,cname);
    });
@@ -1019,7 +1040,7 @@ async function cancelInv(bid,id){
    const ref=(invoice.pre||'')+invoice.no;
    snaps.forEach(([r,s,lines])=>{
     if(s.exists){
-     const p=s.data(),colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+     const p=s.data(),colors=(p.colors||[]).map(x=>({...x,q:+x.q||0}));
      let qty=+p.qty||0;
      lines.forEach(l=>{
       if(colors.length){
@@ -1279,7 +1300,7 @@ async function savePurchase(){
     snaps.push([r,s.data(),groups[pid]]);
    }
    snaps.forEach(([r,p,ls])=>{
-    const colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));
+    const colors=(p.colors||[]).map(x=>({...x,q:+x.q||0}));
     let qty=+p.qty||0,aq=0,av=0;
     ls.forEach(l=>{
      aq+=l.qty;av+=l.qty*l.cost;
@@ -1311,7 +1332,7 @@ async function cancelPurchase(bid,id){
    for(const pid of Object.keys(groups)){const r=db.doc(`branches/${bid}/products/${pid}`);snaps.push([r,await tx.get(r),groups[pid]])}
    snaps.forEach(([r,s,ls])=>{
     if(!s.exists)return;
-    const p=s.data(),colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));let qty=+p.qty||0;
+    const p=s.data(),colors=(p.colors||[]).map(x=>({...x,q:+x.q||0}));let qty=+p.qty||0;
     ls.forEach(l=>{
      if(colors.length){const ex=colors.find(x=>x.n===(l.color||'—'));if(!ex||ex.q<l.qty)throw new Error(tt('pu.rev',{n:p.name}));ex.q-=l.qty}
      else{if(qty<l.qty)throw new Error(tt('pu.rev',{n:p.name}));qty-=l.qty}
@@ -1606,7 +1627,7 @@ const r2=n=>Math.round((+n||0)*100)/100;
 const lkey=l=>(l.pid||'')+'|'+(l.color||'');
 const retNo=()=>{const d=new Date();return 'R'+String(d.getFullYear()).slice(2)+pad2(d.getMonth()+1)+pad2(d.getDate())+'-'+pad2(d.getHours())+pad2(d.getMinutes())+pad2(d.getSeconds())};
 function stockAdd(p,lines){
- const colors=(p.colors||[]).map(x=>({n:x.n,q:+x.q||0}));let qty=+p.qty||0;
+ const colors=(p.colors||[]).map(x=>({...x,q:+x.q||0}));let qty=+p.qty||0;
  lines.forEach(l=>{
   if(colors.length){const nm=l.color||'—',ex=colors.find(x=>x.n===nm);if(ex)ex.q+=l.qty;else colors.push({n:nm,q:l.qty})}
   else qty+=l.qty;
@@ -1707,7 +1728,7 @@ async function finishExchange(){
    const rno=retNo();
    snaps.forEach(([r,p,pid])=>{
     const base=(ex.restock&&rg[pid])?{...p,...stockAdd(p,rg[pid])}:p;
-    const colors=(base.colors||[]).map(x=>({n:x.n,q:+x.q||0}));let qty=+base.qty||0;
+    const colors=(base.colors||[]).map(x=>({...x,q:+x.q||0}));let qty=+base.qty||0;
     (sg[pid]||[]).forEach(l=>{
      if(colors.length){
       const col=colors.find(x=>x.n===(l.color||''));
@@ -1939,7 +1960,7 @@ let SH={orders:{},ounsub:{},okey:'',first:{},items:{},iunsub:null,ibid:null,br:{
 const shStatus=s=>`<span class="pill" style="background:${({new:'#fff3cd',confirmed:'#e3edfb',done:'#dff5ec',cancelled:'#fde2e2'})[s]||'#eee'}">${tt('sh.st.'+(s||'new'))}</span>`;
 const shNewCount=bid=>(SH.orders[bid]||[]).filter(o=>o.status==='new').length;
 const shHash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
-const shPub=(bid,p)=>({bid,pid:p.id,name:p.name||'',code:p.code||'',price:+p.price||0,qty:+p.qty||0,colors:(p.colors||[]).map(c=>({n:String(c.n||''),q:+c.q||0}))});
+const shPub=(bid,p)=>({bid,pid:p.id,name:p.name||'',code:p.code||'',price:+p.price||0,qty:+p.qty||0,colors:(p.colors||[]).map(c=>({n:String(c.n||''),c:vC(c),s:vS(c),q:+c.q||0}))});
 
 /* استماع لطلبات الفروع (ينبّه بطلب جديد حتى لو كنت بتبويب ثاني) */
 function shopListen(){
