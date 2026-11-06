@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>MK Kids</title>
 <link rel="manifest" href="manifest.webmanifest">
-<meta name="theme-color" content="#1f3a5f">
+<meta name="theme-color" content="#ffffff">
 <link rel="icon" type="image/png" href="icon-192.png">
 <link rel="apple-touch-icon" href="icon-512.png">
 <meta name="mobile-web-app-capable" content="yes">
@@ -13,36 +13,38 @@
 <meta name="apple-mobile-web-app-title" content="MK Kids">
 <style>
 *{box-sizing:border-box}
-body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#f3f5f9;color:#1d2433}
-header{background:#1f3a5f;color:#fff;padding:12px 20px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
-header h1{margin:0;font-size:20px}
+body{margin:0;font-family:Tahoma,Arial,sans-serif;background:#fbf8f2;color:#1d2433}
+header{background:#fff;color:#2b2418;border-bottom:2px solid #d2ac67;box-shadow:0 2px 10px rgba(138,106,48,.08);padding:10px 20px;padding-top:calc(12px + env(safe-area-inset-top,0px))}
+header h1{margin:0;font-size:19px;color:#8a6a30;display:flex;align-items:center;gap:10px}
+header h1 img{height:46px;width:auto}
 .top{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:8px}
 #who{display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:13px}
 nav{display:flex;flex-wrap:wrap;align-items:center;gap:4px}
-nav button{background:transparent;border:0;color:#cfd9e8;padding:8px 14px;cursor:pointer;font-size:15px;border-radius:6px;font-family:inherit}
-nav button.on{background:#fff;color:#1f3a5f;font-weight:bold}
+nav button{background:transparent;border:0;color:#6e5f45;padding:8px 14px;cursor:pointer;font-size:15px;border-radius:6px;font-family:inherit}
+nav button.on{background:#a8823f;color:#fff;font-weight:bold}
+nav button:not(.on):hover{background:#f7efdf}
 nav select{width:auto;margin-inline-start:8px}
 select.lg{width:auto;padding:4px 6px}
 main{max-width:1100px;margin:18px auto;padding:0 14px}
 .card{background:#fff;border-radius:10px;padding:16px;margin-bottom:16px;box-shadow:0 1px 4px rgba(0,0,0,.08);overflow-x:auto}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px}
 .stat{background:#fff;border-radius:10px;padding:16px;box-shadow:0 1px 4px rgba(0,0,0,.08)}
-.stat b{display:block;font-size:22px;margin-top:6px;color:#1f3a5f}
+.stat b{display:block;font-size:22px;margin-top:6px;color:#8a6a30}
 table{width:100%;border-collapse:collapse}
 th,td{padding:8px;text-align:start;border-bottom:1px solid #e5e9f0;font-size:14px}
-th{background:#f3f5f9}
+th{background:#f7efdf}
 input,select,textarea{padding:8px;border:1px solid #c5cdd9;border-radius:6px;font-family:inherit;font-size:14px;width:100%}
 input:disabled{background:#eef1f6;color:#667}
 label{font-size:13px;color:#566;display:block;margin:8px 0 3px}
 .row{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px;align-items:end}
-button.b{background:#1f3a5f;color:#fff;border:0;padding:9px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px}
+button.b{background:#a8823f;color:#fff;border:0;padding:9px 16px;border-radius:6px;cursor:pointer;font-family:inherit;font-size:14px}
 button.b:disabled{opacity:.5;cursor:wait}
 button.g{background:#2e8b57}button.r{background:#c0392b}button.s{background:#6b7a90}
 button.sm{padding:4px 10px;font-size:12px}
 .low{color:#c0392b;font-weight:bold}
 .sub{font-size:12px;color:#566;margin-top:3px}
 .cx td{opacity:.5;text-decoration:line-through}
-.pill{display:inline-block;padding:2px 8px;border-radius:10px;background:#e8eef7;font-size:12px}
+.pill{display:inline-block;padding:2px 8px;border-radius:10px;background:#f3e8d2;font-size:12px}
 .dot{display:inline-block;width:9px;height:9px;border-radius:50%;margin-inline-end:4px}
 .crow{display:grid;grid-template-columns:1fr 110px auto;gap:8px;margin-bottom:6px;max-width:460px}
 .crow3{grid-template-columns:1fr 1fr 90px auto;max-width:560px}
@@ -51,17 +53,17 @@ button.sm{padding:4px 10px;font-size:12px}
 #modal .box.small{max-width:380px}
 #modal .box.rcpt{max-width:340px;padding:14px}
 .stamp{position:absolute;top:40%;left:25%;font-size:64px;color:rgba(192,57,43,.25);transform:rotate(-20deg);font-weight:bold;pointer-events:none}
-.inv-head{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #1f3a5f;padding-bottom:10px;margin-bottom:14px}
-.inv-head h2{margin:0;color:#1f3a5f}
+.inv-head{display:flex;justify-content:space-between;gap:12px;border-bottom:2px solid #8a6a30;padding-bottom:10px;margin-bottom:14px}
+.inv-head h2{margin:0;color:#8a6a30}
 .inv-meta{text-align:end}
 .tot{margin-top:12px;margin-inline-start:auto;width:260px}
 .tot div{display:flex;justify-content:space-between;padding:4px 0}
-.tot .grand{font-weight:bold;font-size:17px;border-top:2px solid #1f3a5f}
+.tot .grand{font-weight:bold;font-size:17px;border-top:2px solid #8a6a30}
 .thanks{text-align:center;margin-top:30px;color:#566}
 .card ol{padding-inline-start:20px;line-height:1.8;margin:6px 0}
 code{background:#eef1f6;padding:1px 5px;border-radius:4px;direction:ltr;unicode-bidi:embed}
 #toasts{position:fixed;top:10px;left:10px;right:10px;z-index:99;display:flex;flex-direction:column;gap:8px;pointer-events:none}
-.toast{background:#1f3a5f;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.3);pointer-events:auto;font-size:15px;max-width:480px;margin:0 auto;width:100%}
+.toast{background:#8a6a30;color:#fff;padding:12px 14px;border-radius:10px;box-shadow:0 4px 14px rgba(0,0,0,.3);pointer-events:auto;font-size:15px;max-width:480px;margin:0 auto;width:100%}
 .act{display:flex;gap:8px;margin-top:16px;flex-wrap:wrap;align-items:center}
 .act select{width:auto}
 /* إيصال حراري */
@@ -501,7 +503,7 @@ function tabsList(){
  return tb.map(x=>{let n=x[0]==='set'&&!isAdmin()?tt('tab.acct'):tt('tab.'+x[0]);if(x[0]==='shop'){const c=Object.keys(S.branches).reduce((a,id)=>a+shNewCount(id),0);if(c)n+=` <span class="pill" style="background:#e67e22;color:#fff">${c}</span>`}return [x[0],n]});
 }
 function plain(){
- document.getElementById('brand').textContent='MK Kids';
+ document.getElementById('brand').innerHTML='<img src="logo.png" alt="MK Kids">';
  document.getElementById('nav').innerHTML='';
  document.getElementById('who').innerHTML=langSel();
 }
@@ -513,7 +515,7 @@ function render(){
  if(!authReady){plain();app.innerHTML=`<div class="card">${tt('loading')}</div>`;return}
  if(!me)return loginView();
  const tl=tabsList();if(!tl.some(x=>x[0]===tab))tab='dash';
- document.getElementById('brand').textContent=S.settings.name+(S.cur?' — '+bname(S.cur):'');
+ document.getElementById('brand').innerHTML='<img src="logo.png" alt="'+esc(S.settings.name)+'">'+(S.cur?'<span>'+esc(bname(S.cur))+'</span>':'');
  document.title=S.settings.name;
  let nav=tl.map(x=>`<button class="${tab==x[0]?'on':''}" data-t="${x[0]}" onclick="go('${x[0]}')">${x[1]}</button>`).join('');
  if(isAdmin())nav+=`<select title="${tt('title.branch')}" onchange="switchBr(this.value)">${Object.keys(S.branches).sort().map(id=>`<option value="${id}" ${id==S.cur?'selected':''}>${esc(bname(id))}</option>`).join('')}</select>`;
