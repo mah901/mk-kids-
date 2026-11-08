@@ -1974,7 +1974,8 @@ Object.keys(SHL).forEach(k=>{if(L[k])Object.assign(L[k],SHL[k])});
 
 let SH={orders:{},ounsub:{},okey:'',first:{},items:{},iunsub:null,ibid:null,br:{},bunsub:null,bbid:null,gen:null,gunsub:null,
  map:{},mapLoaded:{},timer:{},busy:{},last:{},err:'',filter:'active',fromOrder:null,edit:null};
-const shStatus=s=>`<span class="pill" style="background:${({new:'#fff3cd',confirmed:'#e3edfb',done:'#dff5ec',cancelled:'#fde2e2'})[s]||'#eee'}">${tt('sh.st.'+(s||'new'))}</span>`;
+const SH_ST=['new','confirmed','done','cancelled'];
+const shStatus=s=>{s=SH_ST.includes(s)?s:'new';return `<span class="pill" style="background:${({new:'#fff3cd',confirmed:'#e3edfb',done:'#dff5ec',cancelled:'#fde2e2'})[s]}">${tt('sh.st.'+s)}</span>`};
 const shNewCount=bid=>(SH.orders[bid]||[]).filter(o=>o.status==='new').length;
 const shHash=s=>{let h=5381;for(let i=0;i<s.length;i++)h=((h<<5)+h+s.charCodeAt(i))|0;return (h>>>0).toString(36)};
 const shPub=(bid,p)=>({bid,pid:p.id,name:p.name||'',code:p.code||'',price:+p.price||0,qty:+p.qty||0,colors:(p.colors||[]).map(c=>({n:String(c.n||''),c:vC(c),s:vS(c),q:+c.q||0}))});
@@ -2045,6 +2046,7 @@ async function shopSync(bid,manual){
 
 /* الطلبات */
 function shOrderHTML(o,bid){
+ if(!/^[A-Za-z0-9]{6,40}$/.test(String(o.id||'')))return '';
  const wa=(o.phone||'').replace(/\D/g,'').replace(/^00/,'').replace(/^0/,'963');
  const msg=encodeURIComponent(tt('sh.waMsg',{n:o.name||'',b:bname(bid),r:o.ref||''}));
  const acts=[];
@@ -2055,11 +2057,11 @@ function shOrderHTML(o,bid){
   acts.push(`<button class="b r sm" onclick="shSetSt('${bid}','${o.id}','cancelled')">${tt('sh.cancel')}</button>`);
  }
  return `<div class="card" style="border-inline-start:5px solid ${({new:'#e67e22',confirmed:'#2c5282',done:'#2e8b57',cancelled:'#c0392b'})[o.status]||'#999'};margin-bottom:10px;padding:12px 14px">
- <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><b>${ltr(o.ref||o.id)} ${shStatus(o.status)} <span class="pill">${tt('sh.via.'+(o.via||'site'))}</span></b><span class="sub">${o.date?fmt(o.date):''}</span></div>
+ <div style="display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;align-items:center"><b>${ltr(o.ref||o.id)} ${shStatus(o.status)} <span class="pill">${tt(o.via==='whatsapp'?'sh.via.whatsapp':'sh.via.site')}</span></b><span class="sub">${o.date?fmt(o.date):''}</span></div>
  <div style="margin-top:6px"><b>${esc(o.name)}</b> · ${ltr(o.phone)} · <a href="tel:${esc(o.phone)}">${tt('sh.call')}</a>${wa?` · <a target="_blank" href="https://wa.me/${wa}?text=${msg}">WhatsApp</a>`:''}</div>
  <div class="sub">${o.mode==='delivery'?'🚚 '+tt('sh.delivery')+': '+esc(o.addr):'🏬 '+tt('sh.pickup')}</div>
- <table style="margin-top:6px">${(o.items||[]).map(l=>`<tr><td>${lineName(l)}${l.s&&!String(l.color||'').includes(l.s)?` — <b>${tt('f.size')} ${esc(l.s)}</b>`:''}${l.code?` <span class="sub">${esc(l.code)}</span>`:''}</td><td>× ${num(l.qty)}</td><td>${num(l.price)}</td><td>${num(l.qty*l.price)}</td></tr>`).join('')}
- <tr><th colspan="3">${tt('sh.items',{n:num(o.count)})}</th><th>${num(o.total)} ${esc(o.cur||'')}</th></tr></table>
+ <table style="margin-top:6px">${(o.items||[]).map(l=>`<tr><td>${lineName(l)}${l.s&&!String(l.color||'').includes(l.s)?` — <b>${tt('f.size')} ${esc(l.s)}</b>`:''}${l.code?` <span class="sub">${esc(l.code)}</span>`:''}</td><td>× ${num(+l.qty||0)}</td><td>${num(+l.price||0)}</td><td>${num((+l.qty||0)*(+l.price||0))}</td></tr>`).join('')}
+ <tr><th colspan="3">${tt('sh.items',{n:num(o.count)})}</th><th>${num(+o.total||0)} ${esc(o.cur||'')}</th></tr></table>
  ${o.note?`<div class="sub" style="background:#fff8e6;padding:6px 8px;border-radius:6px;margin-top:6px"><b>${tt('sh.note')}:</b> ${esc(o.note)}</div>`:''}
  ${o.invoice?`<div class="sub">🧾 ${tt('sh.inv',{n:esc(o.invoice)})}</div>`:''}
  ${acts.length?`<div class="act" style="margin-top:8px">${acts.join('')}</div>`:''}</div>`;
