@@ -161,10 +161,10 @@ body.anon #shell{grid-template-columns:1fr}
 <div id="scrim" onclick="toggleSide(false)"></div><nav id="bnav"></nav>
 <div id="modal"></div>
 <div id="toasts"></div>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-check-compat.js"></script>
+<script src="vendor/firebase-12.19.0/firebase-app-compat.js"></script>
+<script src="vendor/firebase-12.19.0/firebase-auth-compat.js"></script>
+<script src="vendor/firebase-12.19.0/firebase-firestore-compat.js"></script>
+<script src="vendor/firebase-12.19.0/firebase-app-check-compat.js"></script>
 <script>
 const FB_CONFIG={apiKey:"AIzaSyCj732ngmhbs-iEuH8Rdwe-xK3c7Q43RNc",authDomain:"mk-kids.firebaseapp.com",projectId:"mk-kids",storageBucket:"mk-kids.firebasestorage.app",messagingSenderId:"531851369478",appId:"1:531851369478:web:7df0e2b34c551c1abf7787"};
 const ADMIN_EMAIL="men69429@gmail.com";
@@ -2241,9 +2241,10 @@ function shToInv(bid,id){
   const p=prods.find(x=>x.id===l.pid);
   if(!p||((p.colors||[]).length&&!(p.colors||[]).some(c=>c.n===(l.color||'')))){miss.push(l.name+(l.color?' — '+l.color:''));return}
   if(+p.price!==+l.price)notes.push(tt('sh.priceDiff',{a:num(l.price),b:num(p.price)}));
+  const q=Math.max(1,Math.min(999,Math.floor(+l.qty||1)));
   const xs=l.s&&!String(l.color||'').includes(l.s)?' ('+tt('f.size')+' '+l.s+')':'';
   const ex=cart.find(c=>c.pid===p.id&&c.color===(l.color||'')&&c.name===p.name+xs);
-  if(ex)ex.qty+=(+l.qty||1);else cart.push({pid:p.id,name:p.name+xs,code:p.code||'',color:l.color||'',qty:+l.qty||1,price:+p.price||0,cost:+p.cost||0});
+  if(ex)ex.qty+=q;else cart.push({pid:p.id,name:p.name+xs,code:p.code||'',color:l.color||'',qty:q,price:+p.price||0,cost:+p.cost||0});
  });
  cust=o.name||'';custPhone=o.phone||'';disc=0;discType='amt';payM='cash';
  SH.fromOrder={bid,id,ref:o.ref||id};
